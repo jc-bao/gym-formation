@@ -111,3 +111,6 @@ venv.bak/
 
 # debug folder
 /debug
+
+# training folder
+/train
