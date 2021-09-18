@@ -113,6 +113,6 @@ venv.bak/
 /debug
 
 # training folder
-/train
-/ray_results
-/formation_gym.egg-info
+train/
+ray_results/
+formation_gym.egg-info/
