@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.spatial.distance import directed_hausdorff
 
-from multiagent.scenario import BaseScenario
-from multiagent.core import World, Agent, Landmark
+from formation_gym.scenario import BaseScenario
+from formation_gym.core import World, Agent, Landmark
 
 '''
 use Hausdorff distance as reward function
@@ -14,6 +14,7 @@ class Scenario(BaseScenario):
     def make_world(self, num_agents = 3, num_landmarks = 3, num_obstacles = 5):
         # world properties
         world = World()
+        world.
         world.dim_c = 2 # communication channel
         world.collaborative = True
         # agent properties

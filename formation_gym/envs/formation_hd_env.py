@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.spatial.distance import directed_hausdorff
 
-from multiagent.scenario import BaseScenario
-from multiagent.core import World, Agent, Landmark
+from formation_gym.scenario import BaseScenario
+from formation_gym.core import World, Agent, Landmark
 
 '''
 use Hausdorff distance as reward function
@@ -10,9 +10,10 @@ refer to https://www.wikiwand.com/en/Hausdorff_distance#/Applications
 '''
 
 class Scenario(BaseScenario):
-    def make_world(self, num_agents = 3, num_landmarks = 3):
+    def make_world(self, num_agents = 3, num_landmarks = 3, episode_length = 25):
         # world properties
         world = World()
+        world.world_length = episode_length
         world.dim_c = 2 # communication channel
         world.collaborative = True
         # agent properties
@@ -56,8 +57,8 @@ class Scenario(BaseScenario):
         v = v - np.mean(v, 0)
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
         # change landmark pos and color
-        # for i in range(len(world.landmarks)):
-        #     world.landmarks[i].state.p_pos += delta
+        for i in range(len(world.landmarks)):
+            world.landmarks[i].state.p_pos += delta
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
