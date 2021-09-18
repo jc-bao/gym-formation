@@ -114,3 +114,4 @@ venv.bak/
 
 # training folder
 /train
+/ray_results
