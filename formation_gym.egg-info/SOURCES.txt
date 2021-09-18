@@ -1,6 +1,0 @@
-README.md
-setup.py
-formation_gym.egg-info/PKG-INFO
-formation_gym.egg-info/SOURCES.txt
-formation_gym.egg-info/dependency_links.txt
-formation_gym.egg-info/top_level.txt
