@@ -1,0 +1,39 @@
+Failure # 1 (occurred at 2021-09-18_16-05-46)
+Traceback (most recent call last):
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/tune/trial_runner.py", line 739, in _process_trial
+    results = self.trial_executor.fetch_result(trial)
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/tune/ray_trial_executor.py", line 746, in fetch_result
+    result = ray.get(trial_future[0], timeout=DEFAULT_GET_TIMEOUT)
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/_private/client_mode_hook.py", line 82, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/worker.py", line 1623, in get
+    raise value
+ray.exceptions.RayActorError: The actor died because of an error raised in its creation task, [36mray::MADDPG.__init__()[39m (pid=75908, ip=183.173.48.48)
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/rllib/agents/trainer_template.py", line 136, in __init__
+    Trainer.__init__(self, config, env, logger_creator)
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/rllib/agents/trainer.py", line 592, in __init__
+    super().__init__(config, logger_creator)
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/tune/trainable.py", line 103, in __init__
+    self.setup(copy.deepcopy(self.config))
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/rllib/agents/trainer_template.py", line 146, in setup
+    super().setup(config)
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/rllib/agents/trainer.py", line 739, in setup
+    self._init(self.config, self.env_creator)
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/rllib/agents/trainer_template.py", line 170, in _init
+    self.workers = self._make_workers(
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/rllib/agents/trainer.py", line 821, in _make_workers
+    return WorkerSet(
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/rllib/evaluation/worker_set.py", line 83, in __init__
+    remote_spaces = ray.get(self.remote_workers(
+ray.exceptions.RayActorError: The actor died because of an error raised in its creation task, [36mray::RolloutWorker.__init__()[39m (pid=75913, ip=183.173.48.48)
+AttributeError: 'NoneType' object has no attribute 'config'
+
+During handling of the above exception, another exception occurred:
+
+[36mray::RolloutWorker.__init__()[39m (pid=75913, ip=183.173.48.48)
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/rllib/evaluation/rollout_worker.py", line 560, in __init__
+    if len(get_tf_gpu_devices()) < num_gpus:
+  File "/Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/ray/rllib/utils/tf_ops.py", line 52, in get_gpu_devices
+    devices = tf.config.experimental.list_physical_devices()
+AttributeError: 'NoneType' object has no attribute 'config'
+

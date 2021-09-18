@@ -21,13 +21,14 @@ class Scenario(BaseScenario):
             agent.name = 'agent %d' % i
             agent.collide = True
             agent.silent = True
-            agent.size = 0.1 
+            agent.size = 0.04
         # landmark properties
         world.landmarks = [Landmark() for i in range(num_landmarks)]
         for i, landmark in enumerate(world.landmarks):
             landmark.name = 'landmarks %d' % i
             landmark.collide = False 
             landmark.movable = False
+            landmark.size = 0.02
         # initial conditions
         self.reset_world(world)
         return world
@@ -49,10 +50,16 @@ class Scenario(BaseScenario):
     def reward(self, agent, world):
         rew = 0
         u = [a.state.p_pos for a in world.agents]
-        u = u - np.mean(u)
         v = [l.state.p_pos for l in world.landmarks]
-        v = v - np.mean(v)
+        delta = np.mean(u, 0) - np.mean(v, 0)
+        u = u - np.mean(u, 0)
+        v = v - np.mean(v, 0)
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
+        # change landmark pos and color
+        # for i in range(len(world.landmarks)):
+        #     world.landmarks[i].state.p_pos += delta
+            # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
+            # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
             for a in world.agents:
                 if self.is_collision(a, agent):

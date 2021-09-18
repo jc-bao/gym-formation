@@ -6,10 +6,11 @@ from multiagent.policy import InteractivePolicy
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
     parser.add_argument('-s', '--scenario', default='basic_formation_env', help='Path of the scenario Python script.')
+    parser.add_argument('-n', '--num-agents', type=int, default=3, help='Number of agents')
     parser.add_argument('-d', '--demo', action='store_true', help='If show the demo.')
     args = parser.parse_args()
 
-    env = formation_gym.make_env(args.scenario, True)
+    env = formation_gym.make_env(args.scenario, True, args.num_agents)
     env.render()
     policies = [InteractivePolicy(env,i) for i in range(env.n)]
     obs_n = env.reset()
@@ -17,13 +18,14 @@ if __name__ == '__main__':
     while True:
         # query for action from each agent's policy
         act_n = []
+        # demo policy
         if args.demo:
             done, act_n = formation_gym.ezpolicy(env.world)
-            # cnt+=1
             if not done: cnt+=1
             else:
                 print('total steps: ', cnt)
                 # break
+        # keyboard policy
         else:
             for i, policy in enumerate(policies):
                 act_n.append(policy.action(obs_n[i]))

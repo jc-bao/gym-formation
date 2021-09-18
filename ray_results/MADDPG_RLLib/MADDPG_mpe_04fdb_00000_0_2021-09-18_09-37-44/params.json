@@ -1,0 +1,96 @@
+{
+  "actor_hidden_activation": "relu",
+  "actor_hiddens": [
+    64,
+    64
+  ],
+  "actor_lr": 0.01,
+  "adv_policy": "maddpg",
+  "batch_mode": "truncate_episodes",
+  "buffer_size": 1000000,
+  "critic_hidden_activation": "relu",
+  "critic_hiddens": [
+    64,
+    64
+  ],
+  "critic_lr": 0.01,
+  "env": "mpe",
+  "env_config": {
+    "scenario_name": "formation_hd_env"
+  },
+  "gamma": 0.95,
+  "good_policy": "maddpg",
+  "horizon": 25,
+  "learning_starts": 25600,
+  "log_level": "ERROR",
+  "multiagent": {
+    "policies": {
+      "policy_0": [
+        null,
+        "Box(18,)",
+        "Discrete(5)",
+        {
+          "act_space_dict": {
+            "0": "Discrete(5)",
+            "1": "Discrete(5)",
+            "2": "Discrete(5)"
+          },
+          "agent_id": 0,
+          "obs_space_dict": {
+            "0": "Box(18,)",
+            "1": "Box(18,)",
+            "2": "Box(18,)"
+          },
+          "use_local_critic": false
+        }
+      ],
+      "policy_1": [
+        null,
+        "Box(18,)",
+        "Discrete(5)",
+        {
+          "act_space_dict": {
+            "0": "Discrete(5)",
+            "1": "Discrete(5)",
+            "2": "Discrete(5)"
+          },
+          "agent_id": 1,
+          "obs_space_dict": {
+            "0": "Box(18,)",
+            "1": "Box(18,)",
+            "2": "Box(18,)"
+          },
+          "use_local_critic": false
+        }
+      ],
+      "policy_2": [
+        null,
+        "Box(18,)",
+        "Discrete(5)",
+        {
+          "act_space_dict": {
+            "0": "Discrete(5)",
+            "1": "Discrete(5)",
+            "2": "Discrete(5)"
+          },
+          "agent_id": 2,
+          "obs_space_dict": {
+            "0": "Box(18,)",
+            "1": "Box(18,)",
+            "2": "Box(18,)"
+          },
+          "use_local_critic": false
+        }
+      ]
+    },
+    "policy_mapping_fn": "<function main.<locals>.<lambda> at 0x7fea106d8670>"
+  },
+  "n_step": 1,
+  "num_envs_per_worker": 4,
+  "num_gpus": 0,
+  "num_gpus_per_worker": 0,
+  "num_workers": 1,
+  "sample_batch_size": 25,
+  "tau": 0.01,
+  "train_batch_size": 1024
+}
