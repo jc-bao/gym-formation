@@ -1,7 +1,7 @@
 import argparse
 
 import formation_gym
-from multiagent.policy import InteractivePolicy
+from formation_gym.policy import InteractivePolicy
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)

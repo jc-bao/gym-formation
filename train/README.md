@@ -18,8 +18,13 @@
 
      ```
      # training formation with 9 agents
-     python main.py --scenario-name=formation_hd_env --num-agents 9 --save-dir model_hd_9 
-     python main.py --scenario-name=formation_hd_obs_env --num-agents 3  --save-dir model_obs --max-episode-len 50 --evaluate-episode-len 50
+     python main.py --scenario-name=formation_hd_env --num-agents 9 --save-dir model_hd_9
+     # training formation with 4 agents
+     python main.py --scenario-name=formation_hd_env --num-agents 4 --save-dir model_hd_4
+     # training formation with partial observation (4 agents)
+     python main.py --scenario-name=formation_hd_partial_env --num-agents 4 --save-dir model_hd_par_4
+     # training formation with obstacles (4 agents)
+     python main.py --scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hs_obs_4 --max-episode-len 50 --evaluate-episode-len 50
      ```
   
   * Evaluate `python main.py --scenario-name=formation_hd_env --num-agents 9 --save-dir model --model-idx 16 --evaluate True`
