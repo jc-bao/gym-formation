@@ -41,6 +41,8 @@ class Scenario(BaseScenario):
     def observation(self, agent, world):
         # landmark pos
         entity_pos = []
+        for entity in world.landmarks:
+            entity_pos.append(entity.state.p_pos)
         # agent pos & communication
         other_pos = []
         comm = []

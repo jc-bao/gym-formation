@@ -48,6 +48,8 @@ class Scenario(BaseScenario):
     def observation(self, agent, world):
         # landmark pos
         entity_pos = []
+        for entity in world.landmarks[:self.num_landmarks]:
+            entity_pos.append(entity.state.p_pos)
         for entity in world.landmarks[self.num_landmarks:]:
             entity_pos.append(entity.state.p_pos - agent.state.p_pos)
         # agent pos & communication
@@ -69,10 +71,10 @@ class Scenario(BaseScenario):
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
         # change landmark pos and color
         for i, landmark in enumerate(world.landmarks):
-            if i < self.num_landmarks:
-                landmark.state.p_pos += delta
-            else:
-                landmark.state.p_vel = np.array([0, -0.4])
+            # if i < self.num_landmarks:
+            #     landmark.state.p_pos += delta
+            # else:
+            landmark.state.p_vel = np.array([0, -0.4])
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:

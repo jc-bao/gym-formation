@@ -6,13 +6,16 @@
 
 * Overview: This is a basic MADDPG Algorithm implemented with pytorch. Only MADDPG, without any trick.
   * Parameters: tuned
+  
 * Pros: 
     * easy to use
     * perform well on easy tasks (training 3 agents formation task only takes 5h on MacBook-pro-2018-13')
+    
 * Cons: 
     * slow training speed in large number cases and no parallel support (training 9 agents formation task takes 25h on MacBook-pro-2018-13' and cannot fully use the hardware)
     * no gpu support.
     * no normalization, prior replay etc.
+    
 * Use Cases
   * Train
 
@@ -24,11 +27,28 @@
      # training formation with partial observation (4 agents)
      python main.py --scenario-name=formation_hd_partial_env --num-agents 4 --save-dir model_hd_par_4
      # training formation with obstacles (4 agents)
-     python main.py --scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hs_obs_4 --max-episode-len 50 --evaluate-episode-len 50
+     python main.py --scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 --max-episode-len 50 --evaluate-episode-len 50
      ```
   
-  * Evaluate `python main.py --scenario-name=formation_hd_env --num-agents 9 --save-dir model --model-idx 16 --evaluate True`
+  * Evaluate 
+  
+     ```
+     python main.py --scenario-name=formation_hd_env --num-agents 4 --save-dir model_hd_4 --model-idx 12 --evaluate True
+     
+     python main.py --scenario-name=formation_hd_partial_env --num-agents 4 --save-dir model_hd_par_4 --model-idx 12 --evaluate True
+     ```
+  
 * Result: 
+
+    | --scenario-name=formation_hd_env --num-agents 3              | --scenario-name=formation_hd_env --num-agents 4              | --scenario-name=formation_hd_partial_env --num-agents 4 --save-dir model_hd_par_4 |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumpqowoswg60iu0j0gqv02.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumpuzfbeag60iu0j043602.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumq7zonu8g60iu0j0wkq02.gif) |
+    | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumpsfau3ij60hs0dcdgb02.jpg) | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumpswmsnuj60hs0dc0td02.jpg) | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq89gyv6j60hs0dcmy002.jpg) |
+    | **--scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 --max-episode-len 50 --evaluate-episode-len 50** |                                                              |                                                              |
+    | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumqagt0mmg60iu0j07e502.gif) |                                                              |                                                              |
+    | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq6thy8xj60hs0dc0ti02.jpg)<br />Only learning how to escape<br />[Try smaller and more obstacles] |                                                              |                                                              |
+
+    
 
 ### MADDPG-v2 [Not Converge]
 

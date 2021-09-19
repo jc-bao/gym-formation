@@ -37,6 +37,8 @@ class Scenario(BaseScenario):
     def observation(self, agent, world):
         # agent pos & communication
         entity_pos = []
+        for entity in world.landmarks:
+            entity_pos.append(entity.state.p_pos)
         other_pos = []
         comm = []
         for other in world.agents:
@@ -49,13 +51,13 @@ class Scenario(BaseScenario):
         rew = 0
         u = [a.state.p_pos for a in world.agents]
         v = [l.state.p_pos for l in world.landmarks]
-        delta = np.mean(u, 0) - np.mean(v, 0)
+        # delta = np.mean(u, 0) - np.mean(v, 0)
         u = u - np.mean(u, 0)
         v = v - np.mean(v, 0)
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
         # change landmark pos and color
-        for i in range(len(world.landmarks)):
-            world.landmarks[i].state.p_pos += delta
+        # for i in range(len(world.landmarks)):
+        #     world.landmarks[i].state.p_pos += delta
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:

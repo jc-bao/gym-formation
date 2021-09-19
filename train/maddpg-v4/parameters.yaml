@@ -1,0 +1,39 @@
+# environment
+scenario_name: formation_hd_env
+num_agents: 4
+env_steps: 1e7
+episode_length: 30
+train_interval: 120
+# experinment
+experiment_index: 1
+seed: 1
+# algorithm
+algorithm_name: maddpg
+share_policy: True
+use_same_share_obs: True # whether all agents share the same centralized observation[TBD]
+use_avail_acts: True # whether to store what actions are available. [TBD]
+use_reward_normalization: True # Whether to normalize rewards in replay buffer [TBD]
+# replay buffer
+buffer_size: 32 # Number of buffer transitions to train on at once
+use_per: True # Whether to use prioritized experience replay
+per_alpha: 0.6 # Alpha term for prioritized experience replay, like learning rate
+per_beta_start: 0.4 # Starting beta term for prioritized experience replay
+# policy
+
+# parallel
+n_training_threads: 8 # TBD
+n_rollout_threads: 1 #TBD
+# GPU
+device: 'gpu'
+cuda: True
+cuda_deterministic: False # TBD
+# save
+save_path: results
+restore: False
+save_interval: 100000
+# log
+log_interval: 1000
+# evaluate
+use_eval: True
+eval_interval: 10000
+num_eval_episodes: 5
