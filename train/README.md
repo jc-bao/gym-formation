@@ -17,10 +17,11 @@
   * Train
 
      ```
-     python main.py --scenario-name=formation_hd_env --num-agents 9 --save-dir model
+     # training formation with 9 agents
+     python main.py --scenario-name=formation_hd_env --num-agents 9 --save-dir model_hd_9 
      python main.py --scenario-name=formation_hd_obs_env --num-agents 3  --save-dir model_obs --max-episode-len 50 --evaluate-episode-len 50
      ```
-
+  
   * Evaluate `python main.py --scenario-name=formation_hd_env --num-agents 9 --save-dir model --model-idx 16 --evaluate True`
 * Result: 
 
