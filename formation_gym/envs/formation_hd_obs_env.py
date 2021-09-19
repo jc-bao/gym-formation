@@ -11,10 +11,12 @@ add obstables into consideration
 '''
 
 class Scenario(BaseScenario):
-    def make_world(self, num_agents = 3, num_landmarks = 3, num_obstacles = 5):
+    def make_world(self, num_agents = 3, num_landmarks = 3, num_obstacles = 3):
+        self.num_agents = num_agents
+        self.num_landmarks = num_landmarks
+        self.num_obstacles = num_obstacles
         # world properties
         world = World()
-        world.
         world.dim_c = 2 # communication channel
         world.collaborative = True
         # agent properties
@@ -23,7 +25,7 @@ class Scenario(BaseScenario):
             agent.name = 'agent %d' % i
             agent.collide = True
             agent.silent = True
-            agent.size = 0.04
+            agent.size = 0.08
         # landmark and obstacles properties
         world.landmarks = [Landmark() for i in range(num_landmarks + num_obstacles)]
         for i, landmark in enumerate(world.landmarks):
@@ -35,6 +37,10 @@ class Scenario(BaseScenario):
                 landmark.size = 0.02
             # setup obstacles
             else: 
+                landmark.name = 'obstacles %d' % (i - num_landmarks)
+                landmark.collide = True 
+                landmark.movable = True
+                landmark.size = 0.15
         # initial conditions
         self.reset_world(world)
         return world
@@ -42,7 +48,7 @@ class Scenario(BaseScenario):
     def observation(self, agent, world):
         # landmark pos
         entity_pos = []
-        for entity in world.landmarks:
+        for entity in world.landmarks[self.num_landmarks:]:
             entity_pos.append(entity.state.p_pos - agent.state.p_pos)
         # agent pos & communication
         other_pos = []
@@ -56,20 +62,26 @@ class Scenario(BaseScenario):
     def reward(self, agent, world):
         rew = 0
         u = [a.state.p_pos for a in world.agents]
-        v = [l.state.p_pos for l in world.landmarks]
+        v = [l.state.p_pos for l in world.landmarks[:self.num_landmarks]]
         delta = np.mean(u, 0) - np.mean(v, 0)
         u = u - np.mean(u, 0)
         v = v - np.mean(v, 0)
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
         # change landmark pos and color
-        # for i in range(len(world.landmarks)):
-        #     world.landmarks[i].state.p_pos += delta
+        for i, landmark in enumerate(world.landmarks):
+            if i < self.num_landmarks:
+                landmark.state.p_pos += delta
+            else:
+                landmark.state.p_vel = np.array([0, -0.4])
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
             for a in world.agents:
                 if self.is_collision(a, agent):
-                    rew -= 1
+                    rew -= 2
+            for l in world.landmarks[self.num_landmarks:]:
+                if self.is_collision(l, agent):
+                    rew -= 2
         return rew
 
     def reset_world(self, world):
@@ -80,10 +92,18 @@ class Scenario(BaseScenario):
             agent.state.p_vel = np.zeros(world.dim_p)
             agent.state.c = np.zeros(world.dim_c)
         # landmark
-        for landmark in world.landmarks:
-            landmark.color = np.array([0.25, 0.25, 0.25])
-            landmark.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
-            landmark.state.p_vel = np.zeros(world.dim_p)
+        for i, landmark in enumerate(world.landmarks):
+            # setup landmarks
+            if i <self.num_landmarks:
+                landmark.color = np.array([0, 0.3, 0])
+                landmark.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
+                landmark.state.p_vel = np.zeros(world.dim_p)
+            # setup obstacles
+            else: 
+                landmark.color = np.array([0.25, 0.25, 0.25])
+                landmark.state.p_pos = np.random.uniform(low = [-1, 1], high = [1, 1.2])
+                landmark.state.p_vel = np.array([0, -1])
+            
 
     def benchmark_data(self, agent, world):
         # get data to debug

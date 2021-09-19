@@ -17,7 +17,7 @@ def make_env(scenario_name='basic_formation_env', benchmark=False, num_agents = 
     return env
 
 def ezpolicy(world):
-    eps = 0.1
+    eps = 0.02
     act_n = []
     u = np.zeros(5) # 5-d because of no-move action
     for i in range(len(world.agents)):
