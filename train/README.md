@@ -130,7 +130,7 @@
   * render
 
     ```
-    python render.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --model_dir /Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/results/results/formation_hd_env/maddpg/hd_4/run7/models
+    python render.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --model_dir /Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/results/formation_hd_env/maddpg/hd_4/run7/models
     ```
 
     
