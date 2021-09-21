@@ -75,7 +75,7 @@ class Scenario(BaseScenario):
         # change landmark pos and color
         for i, landmark in enumerate(world.landmarks):
             if i < self.num_landmarks:
-                delta = 0
+                delta = [0, 0]
                 landmark.state.p_pos += delta
             else:
                 landmark.state.p_vel = np.array([0, -1])
@@ -141,3 +141,5 @@ class Scenario(BaseScenario):
     def set_bound(self, world):
         for agent in world.agents:
             agent.state.p_pos = np.clip(agent.state.p_pos, [-2, -2], [2, 2])
+        for landmark in world.landmarks[self.num_landmarks:]:
+            landmark.state.p_pos = np.clip(landmark.state.p_pos, [-2, -2], [2, 2])

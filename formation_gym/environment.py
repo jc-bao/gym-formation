@@ -140,7 +140,7 @@ class MultiAgentEnv(gym.Env):
 
         if self.post_step_callback is not None:
             self.post_step_callback(self.world)
-        # print(reward_n, done_n)
+
         return obs_n, reward_n, done_n, info_n
 
     def reset(self):
@@ -267,7 +267,7 @@ class MultiAgentEnv(gym.Env):
                         word = alphabet[np.argmax(other.state.c)]
                     message += (other.name + ' to ' +
                                 agent.name + ': ' + word + '   ')
-            print(message)
+            # print(message)
 
         for i in range(len(self.viewers)):
             # create viewers (if necessary)
@@ -365,6 +365,8 @@ class MultiAgentEnv(gym.Env):
             from . import rendering
 
             if self.shared_viewer:
+                u = [a.state.p_pos for a in self.agents]
+                pos = np.mean(u, 0)
                 pos = np.zeros(self.world.dim_p)
             else:
                 pos = self.agents[i].state.p_pos

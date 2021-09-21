@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     env = formation_gym.make_env(args.scenario, True, args.num_agents)
     env.render()
-    policies = [InteractivePolicy(env,i) for i in range(env.n)]
+    policies = [InteractivePolicy(env,i) for i in range(env.num_agents)]
     obs_n = env.reset()
     cnt = 0
     while True:
@@ -31,6 +31,5 @@ if __name__ == '__main__':
                 act_n.append(policy.action(obs_n[i]))
         # step environment
         obs_n, reward_n, done_n, _ = env.step(act_n)
-        print('obs:', obs_n,'rew:',reward_n,'done', done_n)
         # render all agent views
         env.render()

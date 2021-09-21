@@ -55,7 +55,7 @@ def parse_args(args, parser):
     parser.add_argument('--num_agents', type=int,
                         default=3, help="number of agents")
     parser.add_argument('--use_same_share_obs', action='store_false',
-                        default=True, help="Whether to use available actions")
+                        default=False, help="Whether to use available actions")
 
     all_args = parser.parse_known_args(args)[0]
 

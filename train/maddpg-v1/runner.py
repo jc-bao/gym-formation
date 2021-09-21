@@ -67,10 +67,12 @@ class Runner:
         returns = []
         for episode in range(self.args.evaluate_episodes):
             # reset the environment
-            s = self.env.reset()
             rewards = 0
+            s = self.env.reset()
             for time_step in range(self.args.evaluate_episode_len):
-                if rnd: self.env.render()
+                if rnd: 
+                    self.env.render()
+                    time.sleep(0.02)
                 actions = []
                 with torch.no_grad():
                     for agent_id, agent in enumerate(self.agents):
