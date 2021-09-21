@@ -44,7 +44,7 @@ def get_config():
                         help="After how many train steps popart should be updated")
                         
     # prioritized experience replay
-    parser.add_argument('--use_per', default=True,
+    parser.add_argument('--use_per', default=False,
                         help="Whether to use prioritized experience replay")
     parser.add_argument('--per_nu', type=float, default=0.9,
                         help="Weight of max TD error in formation of PER weights")
