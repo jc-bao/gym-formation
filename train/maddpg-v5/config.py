@@ -16,9 +16,9 @@ def get_config():
                         action='store_false', default=True)
     parser.add_argument('--n_training_threads', type=int,
                         default=4, help="Number of torch threads for training")
-    parser.add_argument('--n_rollout_threads', type=int,  default=16,
+    parser.add_argument('--n_rollout_threads', type=int,  default=128,
                         help="Number of parallel envs for training rollout")
-    parser.add_argument('--n_eval_rollout_threads', type=int,  default=16,
+    parser.add_argument('--n_eval_rollout_threads', type=int,  default=128,
                         help="Number of parallel envs for evaluating rollout")
     parser.add_argument('--num_env_steps', type=int,
                         default=1e6, help="Number of env steps to train for")
