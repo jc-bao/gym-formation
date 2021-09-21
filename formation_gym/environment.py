@@ -30,6 +30,8 @@ class MultiAgentEnv(gym.Env):
         self.observation_callback = observation_callback
         self.info_callback = info_callback
         self.done_callback = done_callback
+        # mimic vector env in order to render
+        self.num_envs = 1
 
         self.post_step_callback = post_step_callback
 

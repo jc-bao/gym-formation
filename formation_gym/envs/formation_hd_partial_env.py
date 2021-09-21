@@ -79,6 +79,7 @@ class Scenario(BaseScenario):
             # world.landmarks[i].state.p_pos += delta
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
+        self.set_bound(world)
         if agent.collide:
             for a in world.agents:
                 if  agent!=a and self.is_collision(a, agent):
@@ -123,4 +124,8 @@ class Scenario(BaseScenario):
     def is_collision(self, agent1, agent2):
         dist = np.linalg.norm(agent1.state.p_pos - agent2.state.p_pos)
         return dist < (agent1.size + agent2.size)
+
+    def set_bound(self, world):
+        for agent in world.agents:
+            agent.state.p_pos = np.clip(agent.state.p_pos, [-2, -2], [2, 2])
 

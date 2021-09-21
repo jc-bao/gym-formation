@@ -118,7 +118,19 @@
 
     ```
     # formation HD with 4 agents
-    python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --n_rollout_threads 128
+    CUDA_VISIBLE_DEVICES=7 python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --n_rollout_threads 128
+    # formation HD with 9 agents
+    CUDA_VISIBLE_DEVICES=5 python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_9 --scenario_name formation_hd_env --num_agents 9 --n_rollout_threads 128
+    # formation obstacles with 4 agents
+    CUDA_VISIBLE_DEVICES=4 python train.py --env_name formation --algorithm_name maddpg --experiment_name obs_4 --scenario_name formation_hd_obs_env --num_agents 4 --n_rollout_threads 128
+    # formation partial observation with 4 agents
+    CUDA_VISIBLE_DEVICES=6 python train.py --env_name formation --algorithm_name maddpg --experiment_name obs_4 --scenario_name formation_hd_partial_env --num_agents 4 --n_rollout_threads 128
+    ```
+
+  * render
+
+    ```
+    python render.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --model_dir /Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/results/results/formation_hd_env/maddpg/hd_4/run7/models
     ```
 
     

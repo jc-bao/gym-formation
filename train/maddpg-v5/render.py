@@ -109,6 +109,7 @@ def main(args):
 
     # create env
     env = make_train_env(all_args)
+    # env = formation_gym.make_env(all_args.scenario_name, False, all_args.num_agents)
     num_agents = all_args.num_agents
 
     # create policies and mapping fn
@@ -159,8 +160,7 @@ def main(args):
 
     total_num_steps = 0
     runner = Runner(config=config)
-    while total_num_steps < all_args.num_env_steps:
-        total_num_steps = runner.run()
+    total_num_steps = runner.eval(render = True)
 
     env.close()
     if all_args.use_eval and (eval_env is not env):

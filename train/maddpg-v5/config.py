@@ -16,7 +16,7 @@ def get_config():
                         action='store_false', default=True)
     parser.add_argument('--n_training_threads', type=int,
                         default=1, help="Number of torch threads for training")
-    parser.add_argument('--n_rollout_threads', type=int,  default=128,
+    parser.add_argument('--n_rollout_threads', type=int,  default=1,
                         help="Number of parallel envs for training rollout")
     parser.add_argument('--n_eval_rollout_threads', type=int,  default=1,
                         help="Number of parallel envs for evaluating rollout")
@@ -190,5 +190,14 @@ def get_config():
 
     # pretained parameters
     parser.add_argument("--model_dir", type=str, default=None)
+
+    # extra
+    # parser.add_argument('--scenario_name', type=str,
+    #                     default='simple_spread', help="Which scenario to run on")
+    # parser.add_argument("--num_landmarks", type=int, default=3)
+    # parser.add_argument('--num_agents', type=int,
+    #                     default=3, help="number of agents")
+    # parser.add_argument('--use_same_share_obs', action='store_false',
+    #                     default=True, help="Whether to use available actions")
 
     return parser
