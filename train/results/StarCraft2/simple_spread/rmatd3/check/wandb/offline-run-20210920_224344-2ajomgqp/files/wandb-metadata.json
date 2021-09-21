@@ -1,0 +1,22 @@
+{
+    "os": "macOS-10.16-x86_64-i386-64bit",
+    "python": "3.9.6",
+    "heartbeatAt": "2021-09-20T14:43:49.511214",
+    "startedAt": "2021-09-20T14:43:44.857656",
+    "docker": null,
+    "cpu_count": 8,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/train.py",
+    "codePath": "train/maddpg-v5/train.py",
+    "git": {
+        "remote": "https://github.com/jc-bao/gym-formation.git",
+        "commit": "ece6961acaaf4fd044dbd48eafcabe9fec1595aa"
+    },
+    "email": null,
+    "root": "/Users/reedpan/Desktop/Research/gym_formation",
+    "host": "Reeds-MacBook-Pro.local",
+    "username": "reedpan",
+    "executable": "/Users/reedpan/opt/anaconda3/envs/rl/bin/python"
+}

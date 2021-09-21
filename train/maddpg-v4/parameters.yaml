@@ -1,38 +1,78 @@
 # environment
+env_name: MPE
 scenario_name: formation_hd_env
 num_agents: 4
 env_steps: 1e7
-episode_length: 30
-train_interval: 120
+episode_length: 5000 # how many steps to evaluate and save
+train_interval: 500000 # how many steps to train
+
 # experinment
 experiment_index: 1
 seed: 1
+
+# policy
+share_policy: True
+
 # algorithm
 algorithm_name: maddpg
-share_policy: True
+gamma: 0.95
 use_same_share_obs: True # whether all agents share the same centralized observation[TBD]
-use_avail_acts: True # whether to store what actions are available. [TBD]
+use_avail_acts: False # whether to store what actions are available. [TBD]
 use_reward_normalization: True # Whether to normalize rewards in replay buffer [TBD]
+use_popart: False # if use popart to handle multi-tasks
+popart_update_interval_step: 2 # after how many train steps popart should be updated
+use_value_active_masks: False # [TBD] [Q]
+use_huber_loss: False # Whether to use Huber loss for critic update to improve robustness [TBD]
+huber_delta: 10.0 
+actor_update_interval: 1 # number of critic updates to perform between every update to the actor. [TBD]
+tau: 0.005 # Polyak update rate
+lr: 5e-4 # learning rate
+opti_eps: 1e-5 # RMSprop optimizer epsilon [Q]
+weight_decay: 0 # [Q]
+target_noise: False
+use_orthogonal: True
+use_feature_normalization: True # Whether to apply layernorm to the inputs
+use_ReLU: True
+use_conv1d: False # Whether to use conv1d
+stacked_frames: 1 # Dimension of hidden layers for actor/critic networks
+layer_N: 1 # Number of layers for actor/critic networks
+hidden_size: 64 # Dimension of hidden layers for actor/critic networks
+gain: 0.01 # gain for action last layer [Q]
+hidden_size: 64 #"Dimension of hidden layers for actor/critic networks")
+
+# exploration parameters
+epsilon_start: 1.0
+epsilon_finish: 0.05
+epsilon_anneal_time: 50000
+act_noise_std: 0.1
+num_random_episodes: 500 # [TBD]
+
 # replay buffer
 buffer_size: 32 # Number of buffer transitions to train on at once
 use_per: True # Whether to use prioritized experience replay
 per_alpha: 0.6 # Alpha term for prioritized experience replay, like learning rate
 per_beta_start: 0.4 # Starting beta term for prioritized experience replay
+per_eps: 1e-6 # Eps term for prioritized experience replay
+
 # policy
 
 # parallel
 n_training_threads: 8 # TBD
 n_rollout_threads: 1 #TBD
+
 # GPU
 device: 'gpu'
 cuda: True
 cuda_deterministic: False # TBD
+
 # save
 save_path: results
 restore: False
 save_interval: 100000
+
 # log
 log_interval: 1000
+
 # evaluate
 use_eval: True
 eval_interval: 10000

@@ -12,12 +12,12 @@ partial observation environment
 '''
 
 class Scenario(BaseScenario):
-    def make_world(self, num_agents = 4, num_landmarks = 4, num_obs = 2, episode_length = 25):
+    def make_world(self, num_agents = 4, num_landmarks = 4, num_obs = 2, world_length = 25):
         self.num_obs = num_obs
         self.num_agents = num_agents
         # world properties
         world = World()
-        world.world_length = episode_length
+        world.world_length = world_length
         world.dim_c = 2 # communication channel
         world.collaborative = True
         # agent properties
@@ -46,16 +46,22 @@ class Scenario(BaseScenario):
         # agent pos & communication
         other_pos = []
         comm = []
+        cnt = 0
+        # way3: watch for 2 guys
+        # get agent ID
+        agent_id = int(agent.name.split()[-1])
+        idx = [i % self.num_agents for i in range(agent_id, agent_id + self.num_obs)]
+        for i in idx:
+            other_pos.append(world.agents[i].state.p_pos - agent.state.p_pos)
         for other in world.agents:
             if other is agent: continue
             comm.append(other.state.c)
-            other_pos.append(other.state.p_pos - agent.state.p_pos)
         # make the furthest point to zero
         # way1: make the far observation to zero
-        others_dist = np.linalg.norm(other_pos, axis = 1)
-        idx = np.argpartition(others_dist, self.num_obs)
-        for i in idx[self.num_obs:]:
-            other_pos[i] = np.zeros(world.dim_p)
+        # others_dist = np.linalg.norm(other_pos, axis = 1)
+        # idx = np.argpartition(others_dist, self.num_obs)
+        # for i in idx[self.num_obs:]:
+        #     other_pos[i] = np.zeros(world.dim_p)
         # way2: remove the far obs
         # other_pos = other_pos[idx[:self.num_obs]]
         return np.concatenate([agent.state.p_vel]+[agent.state.p_pos]+entity_pos + other_pos + comm)
@@ -69,13 +75,13 @@ class Scenario(BaseScenario):
         v = v - np.mean(v, 0)
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
         # change landmark pos and color
-        for i in range(len(world.landmarks)):
-            world.landmarks[i].state.p_pos += delta
+        # for i in range(len(world.landmarks)):
+            # world.landmarks[i].state.p_pos += delta
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
             for a in world.agents:
-                if self.is_collision(a, agent):
+                if  agent!=a and self.is_collision(a, agent):
                     rew -= 1
         return rew
 

@@ -24,7 +24,7 @@ def ezpolicy(world):
         move1 = True
         move2 = True
         delta = abs(world.agents[i].state.p_pos - world.landmarks[i].state.p_pos)
-        coee = 0.1
+        coee = 0.5
         if -(world.agents[i].state.p_pos[0] - world.landmarks[i].state.p_pos[0])>eps: 
             u[1] += coee*delta[0]
         elif (world.agents[i].state.p_pos[0] - world.landmarks[i].state.p_pos[0])>eps: 

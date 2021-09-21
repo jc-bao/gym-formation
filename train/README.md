@@ -42,11 +42,11 @@
 
     | --scenario-name=formation_hd_env --num-agents 3              | --scenario-name=formation_hd_env --num-agents 4              | --scenario-name=formation_hd_partial_env --num-agents 4 --save-dir model_hd_par_4 |
     | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-    | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumpqowoswg60iu0j0gqv02.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumpuzfbeag60iu0j043602.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumq7zonu8g60iu0j0wkq02.gif) |
+    | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumpqowoswg60iu0j0gqv02.gif) | ![Large GIF (678x684)](/Users/reedpan/Downloads/Sep-20-2021 10-40-35/Large GIF (678x684).gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumq7zonu8g60iu0j0wkq02.gif) |
     | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumpsfau3ij60hs0dcdgb02.jpg) | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumpswmsnuj60hs0dc0td02.jpg) | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq89gyv6j60hs0dcmy002.jpg) |
     | **--scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 --max-episode-len 50 --evaluate-episode-len 50** |                                                              |                                                              |
     | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumqagt0mmg60iu0j07e502.gif) |                                                              |                                                              |
-    | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq6thy8xj60hs0dc0ti02.jpg)<br />Only learning how to escape<br />[Try smaller and more obstacles] |                                                              |                                                              |
+    | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq6thy8xj60hs0dc0ti02.jpg)Only learning how to escape [Try smaller and more obstacles] |                                                              |                                                              |
 
     
 
@@ -101,6 +101,25 @@
     | ------------------------------------------------------------ | ---- | ---- | ---- |
     | Agent_num = 9 run=11                                         |      |      |      |
     | ![image-20210919113901134](https://tva1.sinaimg.cn/large/008i3skNly1gulsb77p9tj60kz07rwf302.jpg)<br />[Not converge] |      |      |      |
+
+    
+
+### MADDPG-v5
+
+* Overview: use off-policy open-source framework
+
+* Pros:
+
+* Cons:
+
+* Use cases:
+
+  * Train
+
+    ```
+    # formation HD with 4 agents
+    python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --n_rollout_threads 128
+    ```
 
     
 

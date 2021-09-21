@@ -62,7 +62,7 @@ class Scenario(BaseScenario):
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
             for a in world.agents:
-                if self.is_collision(a, agent):
+                if agent!=a and self.is_collision(a, agent):
                     rew -= 1
         return rew
 
@@ -103,5 +103,5 @@ class Scenario(BaseScenario):
 
     def is_collision(self, agent1, agent2):
         dist = np.linalg.norm(agent1.state.p_pos - agent2.state.p_pos)
-        return dist < (agent1.size + agent2.size)
+        return dist < (agent1.size + agent2.size)/2
 

@@ -23,7 +23,7 @@ class MultiAgentEnv(gym.Env):
         self.current_step = 0
         self.agents = self.world.policy_agents
         # set required vectorized gym env property
-        self.n = len(world.policy_agents)
+        self.num_agents = len(world.policy_agents)
         # scenario callbacks
         self.reset_callback = reset_callback
         self.reward_callback = reward_callback
@@ -91,14 +91,14 @@ class MultiAgentEnv(gym.Env):
             agent.action.c = np.zeros(self.world.dim_c)
         
         self.share_observation_space = [spaces.Box(
-            low=-np.inf, high=+np.inf, shape=(share_obs_dim,), dtype=np.float32) for _ in range(self.n)]
+            low=-np.inf, high=+np.inf, shape=(share_obs_dim,), dtype=np.float32) for _ in range(self.num_agents)]
         
         # rendering
         self.shared_viewer = shared_viewer
         if self.shared_viewer:
             self.viewers = [None]
         else:
-            self.viewers = [None] * self.n
+            self.viewers = [None] * self.num_agents
         self._reset_render()
 
     def seed(self, seed=None):
@@ -124,7 +124,7 @@ class MultiAgentEnv(gym.Env):
         for i, agent in enumerate(self.agents):
             obs_n.append(self._get_obs(agent))
             reward_n.append([self._get_reward(agent)])
-            done_n.append(self._get_done(agent))
+            done_n.append([self._get_done(agent)])
             info = {'individual_reward': self._get_reward(agent)}
             env_info = self._get_info(agent)
             if 'fail' in env_info.keys():
@@ -134,11 +134,11 @@ class MultiAgentEnv(gym.Env):
         # all agents get total reward in cooperative case, if shared reward, all agents have the same reward, and reward is sum
         reward = np.sum(reward_n)
         if self.shared_reward:
-            reward_n = [[reward]] * self.n
+            reward_n = [[reward]] * self.num_agents
 
         if self.post_step_callback is not None:
             self.post_step_callback(self.world)
-
+        # print(reward_n, done_n)
         return obs_n, reward_n, done_n, info_n
 
     def reset(self):

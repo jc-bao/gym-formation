@@ -110,7 +110,7 @@ class Agent(Entity):
 
 # multi-agent world
 class World(object):
-    def __init__(self):
+    def __init__(self, world_length = 50):
         # list of agents and entities (can change at execution-time!)
         self.agents = []
         self.landmarks = []
@@ -133,7 +133,7 @@ class World(object):
         self.cached_dist_vect = None
         self.cached_dist_mag = None
         # zoe 20200420
-        self.world_length = 25
+        self.world_length = world_length
         self.world_step = 0
         self.num_agents = 0
         self.num_landmarks = 0

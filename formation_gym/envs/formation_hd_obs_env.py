@@ -11,12 +11,13 @@ add obstables into consideration
 '''
 
 class Scenario(BaseScenario):
-    def make_world(self, num_agents = 3, num_landmarks = 3, num_obstacles = 3):
+    def make_world(self, num_agents = 3, num_landmarks = 3, num_obstacles = 3, world_length = 50):
         self.num_agents = num_agents
         self.num_landmarks = num_landmarks
         self.num_obstacles = num_obstacles
         # world properties
         world = World()
+        world.world_length = world_length
         world.dim_c = 2 # communication channel
         world.collaborative = True
         # agent properties
@@ -69,17 +70,20 @@ class Scenario(BaseScenario):
         u = u - np.mean(u, 0)
         v = v - np.mean(v, 0)
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
+        # set boundary
+        self.set_bound(world)
         # change landmark pos and color
         for i, landmark in enumerate(world.landmarks):
-            # if i < self.num_landmarks:
-            #     landmark.state.p_pos += delta
-            # else:
-            landmark.state.p_vel = np.array([0, -0.4])
+            if i < self.num_landmarks:
+                delta = 0
+                landmark.state.p_pos += delta
+            else:
+                landmark.state.p_vel = np.array([0, -1])
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
             for a in world.agents:
-                if self.is_collision(a, agent):
+                if agent!=a and self.is_collision(a, agent):
                     rew -= 2
             for l in world.landmarks[self.num_landmarks:]:
                 if self.is_collision(l, agent):
@@ -95,6 +99,7 @@ class Scenario(BaseScenario):
             agent.state.c = np.zeros(world.dim_c)
         # landmark
         for i, landmark in enumerate(world.landmarks):
+            step = np.linspace(-2, 2, self.num_obstacles+1)
             # setup landmarks
             if i <self.num_landmarks:
                 landmark.color = np.array([0, 0.3, 0])
@@ -103,7 +108,7 @@ class Scenario(BaseScenario):
             # setup obstacles
             else: 
                 landmark.color = np.array([0.25, 0.25, 0.25])
-                landmark.state.p_pos = np.random.uniform(low = [-1, 1], high = [1, 1.2])
+                landmark.state.p_pos = np.random.uniform([step[i-self.num_landmarks], 2.0], [step[i+1-self.num_landmarks], 2.5])
                 landmark.state.p_vel = np.array([0, -1])
             
 
@@ -133,3 +138,6 @@ class Scenario(BaseScenario):
         dist = np.linalg.norm(agent1.state.p_pos - agent2.state.p_pos)
         return dist < (agent1.size + agent2.size)
 
+    def set_bound(self, world):
+        for agent in world.agents:
+            agent.state.p_pos = np.clip(agent.state.p_pos, [-2, -2], [2, 2])
