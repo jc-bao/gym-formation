@@ -3,7 +3,6 @@ import os
 import numpy as np
 from pathlib import Path
 import socket
-import wandb
 import setproctitle
 import torch
 from config import get_config
