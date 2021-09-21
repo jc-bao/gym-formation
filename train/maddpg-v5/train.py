@@ -50,12 +50,12 @@ def make_eval_env(all_args):
 
 def parse_args(args, parser):
     parser.add_argument('--scenario_name', type=str,
-                        default='simple_spread', help="Which scenario to run on")
+                        default='formation_hd_env', help="Which scenario to run on")
     parser.add_argument("--num_landmarks", type=int, default=3)
     parser.add_argument('--num_agents', type=int,
                         default=3, help="number of agents")
     parser.add_argument('--use_same_share_obs', action='store_false',
-                        default=False, help="Whether to use available actions")
+                        default=True, help="Whether to use available actions")
 
     all_args = parser.parse_known_args(args)[0]
 

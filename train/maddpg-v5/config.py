@@ -34,7 +34,7 @@ def get_config():
     # replay buffer parameters
     parser.add_argument('--episode_length', type=int,
                         default=50, help="Max length for any episode")
-    parser.add_argument('--buffer_size', type=int, default=5e5,
+    parser.add_argument('--buffer_size', type=int, default=500000,
                         help="Max # of transitions that replay buffer can contain")
     parser.add_argument('--use_reward_normalization', 
                         default=True, help="Whether to normalize rewards in replay buffer")
