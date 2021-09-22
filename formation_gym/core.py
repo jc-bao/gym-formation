@@ -302,13 +302,14 @@ class World(object):
         else:
             # compute actual distance between entities
             delta_pos = entity_a.state.p_pos - entity_b.state.p_pos
-            dist = np.sqrt(np.sum(np.square(delta_pos)))
+            dist = np.linalg.norm(delta_pos)
             # minimum allowable distance
             dist_min = entity_a.size + entity_b.size
         # softmax penetration
         k = self.contact_margin
         penetration = np.logaddexp(0, -(dist - dist_min)/k)*k
         force = self.contact_force * delta_pos / dist * penetration
+        # print('force:', force, ' penetration: ', penetration, ' dist: ', dist)
         if entity_a.movable and entity_b.movable:
             # consider mass in collisions
             force_ratio = entity_b.mass / entity_a.mass

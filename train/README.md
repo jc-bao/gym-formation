@@ -142,14 +142,43 @@
 
     
 
+* Issues:
+
+  ```
+  /mnt/ssd_raid0/home/pancy/Documents/gym-formation/formation_gym/core.py:311: RuntimeWarning: invalid value encountered in true_divide
+    force = self.contact_force * delta_pos / dist * penetration
+  average_episode_rewards: -90.15602982652563 final_step_rewards: nan
+  ```
+
+  
+
 ## MAPPO[Not converge]
 
 * Overview: MAPPO algorithm which support parallel.
+
 * Pros:
+
 * Cons:
+
 * Note: remember add `nn.parameter.Paramter()` to convert varibles if use torch 1.9
+
 * Use Cases:
   * Train `./train_formation.sh`
+
+* Issues
+
+  ```
+  on-policy/onpolicy/algorithms/utils/distributions.py", line 68, in forward
+      return FixedCategorical(logits=x)
+  ValueError: The parameter logits has invalid values
+  ```
+
+  ```
+  formation_gym/core.py:311: RuntimeWarning: invalid value encountered in true_divide
+    force = self.contact_force * delta_pos / dist * penetration
+  ```
+
+  
 
 * Result:
 
