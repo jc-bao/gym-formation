@@ -192,6 +192,8 @@ def get_config():
     parser.add_argument("--model_dir", type=str, default=None)
 
     # extra
+    parser.add_argument('--use_warmup',
+                        default='True', help="if use warm_up")
     # parser.add_argument('--scenario_name', type=str,
     #                     default='simple_spread', help="Which scenario to run on")
     # parser.add_argument("--num_landmarks", type=int, default=3)

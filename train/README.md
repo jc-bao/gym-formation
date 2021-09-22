@@ -120,7 +120,7 @@
 
     ```
     # formation HD with 2 agents
-    python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_2 --scenario_name formation_hd_env --num_agents 2 --n_rollout_threads 8 --episode_length 25 
+    python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_2 --scenario_name formation_hd_env --num_agents 2 --n_rollout_threads 32 --n_rollout_threads 32 --episode_length 25 --lr 7e-4 --update_interval 1  # 32(run11) 8(run12) 1(run10)
     # formation HD with 4 agents
     CUDA_VISIBLE_DEVICES=7 python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --n_rollout_threads 128
     # formation HD with 9 agents
