@@ -1,4 +1,5 @@
 import argparse
+import numpy as np
 
 import formation_gym
 from formation_gym.policy import InteractivePolicy
@@ -8,6 +9,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--scenario', default='basic_formation_env', help='Path of the scenario Python script.')
     parser.add_argument('-n', '--num-agents', type=int, default=3, help='Number of agents')
     parser.add_argument('-d', '--demo', action='store_true', help='If show the demo.')
+    parser.add_argument('-r', '--random', action='store_true', help='If use random policy.')
     args = parser.parse_args()
 
     env = formation_gym.make_env(args.scenario, True, args.num_agents)
@@ -29,7 +31,10 @@ if __name__ == '__main__':
         else:
             for i, policy in enumerate(policies):
                 act_n.append(policy.action(obs_n[i]))
+        # random policy
+        if args.random: act_n = np.random.uniform(-1, 1, size=np.array(act_n).shape)
         # step environment
         obs_n, reward_n, done_n, _ = env.step(act_n)
+        print('reward:',reward_n)
         # render all agent views
         env.render()

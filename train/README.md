@@ -119,6 +119,8 @@
   * Train
 
     ```
+    # formation HD with 2 agents
+    python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_2 --scenario_name formation_hd_env --num_agents 2 --n_rollout_threads 8 --episode_length 25 
     # formation HD with 4 agents
     CUDA_VISIBLE_DEVICES=7 python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --n_rollout_threads 128
     # formation HD with 9 agents
@@ -132,6 +134,8 @@
   * render
 
     ```
+    # formation HD with 2 agents
+    python render.py --env_name formation --algorithm_name maddpg --experiment_name hd_2 --scenario_name formation_hd_env --num_agents 2 --n_rollout_threads 8 --episode_length 25 --model_dir /Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/results/formation_hd_env/maddpg/hd_2/run1/models/
     # formation HD with 4 agents
     python render.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --buffer_size 1 --num_random_episodes 0 --model_dir /Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/results/formation_hd_env/maddpg/hd_4/run9/models/
     # formation HD with 9 agents
@@ -148,6 +152,14 @@
   /mnt/ssd_raid0/home/pancy/Documents/gym-formation/formation_gym/core.py:311: RuntimeWarning: invalid value encountered in true_divide
     force = self.contact_force * delta_pos / dist * penetration
   average_episode_rewards: -90.15602982652563 final_step_rewards: nan
+  ```
+
+  ```
+  /Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/numpy/core/fromnumeric.py:3372: RuntimeWarning: Mean of empty slice.
+    return _methods._mean(a, axis=axis, dtype=dtype,
+  /Users/reedpan/opt/anaconda3/envs/rl/lib/python3.9/site-packages/numpy/core/_methods.py:170: RuntimeWarning: invalid value encountered in double_scalars
+    ret = ret.dtype.type(ret / rcount)
+  eval_final_episode_rewards is nan
   ```
 
   
