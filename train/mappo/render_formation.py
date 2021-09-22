@@ -7,7 +7,7 @@ from pathlib import Path
 
 import torch
 
-from onpolicy.config import get_config
+from .config import get_config
 
 from onpolicy.envs.env_wrappers import SubprocVecEnv, DummyVecEnv
 

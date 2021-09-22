@@ -46,11 +46,10 @@ class Scenario(BaseScenario):
         # agent pos & communication
         other_pos = []
         comm = []
-        cnt = 0
         # way3: watch for 2 guys
         # get agent ID
         agent_id = int(agent.name.split()[-1])
-        idx = [i % self.num_agents for i in range(agent_id, agent_id + self.num_obs)]
+        idx = [i % self.num_agents for i in range(agent_id+1, agent_id+1 + self.num_obs)]
         for i in idx:
             other_pos.append(world.agents[i].state.p_pos - agent.state.p_pos)
         for other in world.agents:

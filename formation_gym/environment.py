@@ -126,13 +126,12 @@ class MultiAgentEnv(gym.Env):
         for i, agent in enumerate(self.agents):
             obs_n.append(self._get_obs(agent))
             reward_n.append([self._get_reward(agent)])
-            done_n.append([self._get_done(agent)])
+            done_n.append(self._get_done(agent))
             info = {'individual_reward': self._get_reward(agent)}
             env_info = self._get_info(agent)
             if 'fail' in env_info.keys():
                 info['fail'] = env_info['fail']
             info_n.append(info)
-
         # all agents get total reward in cooperative case, if shared reward, all agents have the same reward, and reward is sum
         reward = np.sum(reward_n)
         if self.shared_reward:
@@ -140,7 +139,6 @@ class MultiAgentEnv(gym.Env):
 
         if self.post_step_callback is not None:
             self.post_step_callback(self.world)
-
         return obs_n, reward_n, done_n, info_n
 
     def reset(self):
@@ -155,7 +153,6 @@ class MultiAgentEnv(gym.Env):
 
         for agent in self.agents:
             obs_n.append(self._get_obs(agent))
-
         return obs_n
 
     # get info used for benchmarking

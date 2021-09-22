@@ -20,7 +20,7 @@
   * Train
 
      ```
-     # training formation with 9 agents
+     # training formation with 6 agents
      python main.py --scenario-name=formation_hd_env --num-agents 6 --save-dir model_hd_6 --time-steps 2000000 --max-episode-len 40  
      # training formation with 4 agents
      python main.py --scenario-name=formation_hd_env --num-agents 4 --save-dir model_hd_4

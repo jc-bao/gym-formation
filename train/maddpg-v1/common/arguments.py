@@ -17,9 +17,9 @@ def get_args():
     parser.add_argument("--num-agents", type=int, default=3, help="number of agents")
     # Core training parameters
     parser.add_argument("--lr-actor", type=float, default=1e-4, help="learning rate of actor")
-    parser.add_argument("--lr-critic", type=float, default=1e-3, help="learning rate of critic")
+    parser.add_argument("--lr-critic", type=float, default=1e-4, help="learning rate of critic")
     parser.add_argument("--epsilon", type=float, default=0.1, help="epsilon greedy")
-    parser.add_argument("--noise_rate", type=float, default=0.1, help="noise rate for sampling from a standard normal distribution ")
+    parser.add_argument("--noise_rate", type=float, default=0.25, help="noise rate for sampling from a standard normal distribution ")
     parser.add_argument("--gamma", type=float, default=0.95, help="discount factor")
     parser.add_argument("--tau", type=float, default=0.01, help="parameter for updating the target network")
     parser.add_argument("--buffer-size", type=int, default=int(5e5), help="number of transitions can be stored in buffer")

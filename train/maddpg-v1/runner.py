@@ -72,7 +72,7 @@ class Runner:
             for time_step in range(self.args.evaluate_episode_len):
                 if rnd: 
                     self.env.render()
-                    time.sleep(0.02)
+                    # time.sleep(1)
                 actions = []
                 with torch.no_grad():
                     for agent_id, agent in enumerate(self.agents):

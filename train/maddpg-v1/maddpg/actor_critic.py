@@ -18,7 +18,6 @@ class Actor(nn.Module):
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
         actions = self.max_action * torch.tanh(self.action_out(x))
-
         return actions
 
 

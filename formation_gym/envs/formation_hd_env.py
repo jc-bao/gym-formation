@@ -57,7 +57,7 @@ class Scenario(BaseScenario):
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
         # change landmark pos and color
         for i in range(len(world.landmarks)):
-            # delta = 0 
+            delta = [0, 0]
             world.landmarks[i].state.p_pos += delta
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])

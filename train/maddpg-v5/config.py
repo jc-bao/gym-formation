@@ -62,7 +62,7 @@ def get_config():
                         default=False, help="Whether agents share the same policy")
     parser.add_argument('--hidden_size', type=int, default=64,
                         help="Dimension of hidden layers for actor/critic networks")
-    parser.add_argument('--layer_N', type=int, default=3,
+    parser.add_argument('--layer_N', type=int, default=2,
                         help="Number of layers for actor/critic networks")
     parser.add_argument('--use_ReLU', action='store_false',
                         default=True, help="Whether to use ReLU")
@@ -102,7 +102,7 @@ def get_config():
     parser.add_argument("--use_cat_self", action='store_false', default=True)
 
     # optimizer parameters
-    parser.add_argument('--lr', type=float, default=7e-4,
+    parser.add_argument('--lr', type=float, default=1e-4,
                         help="Learning rate for Adam")
     parser.add_argument("--opti_eps", type=float, default=1e-5,
                         help='RMSprop optimizer epsilon (default: 1e-5)')
@@ -115,8 +115,8 @@ def get_config():
                         help="Discount factor for env")
     parser.add_argument("--use_max_grad_norm",
                         action='store_false', default=True)
-    parser.add_argument("--max_grad_norm", type=float, default=10.0,
-                        help='max norm of gradients (default: 0.5)')
+    parser.add_argument("--max_grad_norm", type=float, default=0.5,
+                        help='max norm of gradients (default: 0.5)') # [TBD]
     parser.add_argument('--use_huber_loss', action='store_true',
                         default=False, help="Whether to use Huber loss for critic update")
     parser.add_argument("--huber_delta", type=float, default=10.0)
