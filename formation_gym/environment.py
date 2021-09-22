@@ -126,7 +126,7 @@ class MultiAgentEnv(gym.Env):
         for i, agent in enumerate(self.agents):
             obs_n.append(self._get_obs(agent))
             reward_n.append([self._get_reward(agent)])
-            done_n.append(self._get_done(agent))
+            done_n.append([self._get_done(agent)])
             info = {'individual_reward': self._get_reward(agent)}
             env_info = self._get_info(agent)
             if 'fail' in env_info.keys():
