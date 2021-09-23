@@ -17,7 +17,7 @@ class Runner:
         self.env = env
         self.agents = self._init_agents()
         self.buffer = Buffer(args)
-        self.save_path = self.args.save_dir + '/' + self.args.scenario_name
+        self.save_path = 'results/' + self.args.save_dir + '/' + self.args.scenario_name
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
 

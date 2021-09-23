@@ -37,15 +37,15 @@
      
      python main.py --scenario-name=formation_hd_partial_env --num-agents 4 --save-dir model_hd_par_4 --model-idx 12 --evaluate True
      
-     python main.py --scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4_2 --max-episode-len 50 --evaluate-episode-len 50 --evaluate True --model-idx 2
+     python main.py --scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 --max-episode-len 50 --evaluate-episode-len 50 --evaluate True --model-idx 99
      ```
   
 * Result: 
 
     | --scenario-name=formation_hd_env --num-agents 3              | --scenario-name=formation_hd_env --num-agents 4              | --scenario-name=formation_hd_partial_env --num-agents 4 --save-dir model_hd_par_4 |
     | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-    | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumpqowoswg60iu0j0gqv02.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1guoks906ubg60iu0j042602.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumq7zonu8g60iu0j0wkq02.gif) |
-    | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumpsfau3ij60hs0dcdgb02.jpg) | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumpswmsnuj60hs0dc0td02.jpg) | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq89gyv6j60hs0dcmy002.jpg) |
+    | ![Sep-23-2021 13-42-30](https://tva1.sinaimg.cn/large/008i3skNly1guqidc3ox4g60iu0j07c702.gif) | ![002](https://tva1.sinaimg.cn/large/008i3skNly1guqiapgnyrg60iu0j012k02.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumq7zonu8g60iu0j0wkq02.gif) |
+    | ![image-20210923134622867](https://tva1.sinaimg.cn/large/008i3skNly1guqih3g8tuj60y80p2gmw02.jpg) | ![image-20210923134652779](https://tva1.sinaimg.cn/large/008i3skNly1guqihh5om5j60xk0o8ab302.jpg) | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq89gyv6j60hs0dcmy002.jpg) |
     | **--scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 --max-episode-len 50 --evaluate-episode-len 50** |                                                              |                                                              |
     | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumqagt0mmg60iu0j07e502.gif) |                                                              |                                                              |
     | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq6thy8xj60hs0dc0ti02.jpg)Only learning how to escape [Try smaller and more obstacles] |                                                              |                                                              |
@@ -95,7 +95,22 @@
 * Use Cases
 
   * Train `python main.py --scenario=formation_hd_env --agent-num 9`
-  * Evaluate `python evaluate.py --env_id=formation_hd_env --agent-num 9 --run_num 11`
+
+    ```
+    # train simple spread
+    python main.py --scenario simple_spread --num-gpus 1 --num-workers 4 --num-envs-per-worker 4  --sample-batch-size 6
+    # train formation with 4 agents
+    python main.py --scenario=formation_hd_env --agent-num 4 --num-gpus 1 --num-workers 1 --num-envs-per-worker 4  --sample-batch-size 25
+    python main.py --scenario=formation_hd_env --agent-num 4 --num-gpus 1 --num-workers 4 --num-envs-per-worker 4  --sample-batch-size 6
+    python main.py --scenario=formation_hd_env --agent-num 4 --num-gpus 1 --num-workers 8 --num-envs-per-worker 4  --sample-batch-size 4
+    
+    ```
+
+    
+
+  * Evaluate `rllib rollout \
+        '/Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v3/ray_results/MADDPG_RLLib/MADDPG_mpe_72161_00000_0_2021-09-23_19-43-18/params.pkl' \
+        --run coontrib/MADDPG --env simple_spread --steps 100`
 
 * Result: 
 
@@ -120,7 +135,7 @@
 
     ```
     # formation HD with 2 agents
-    python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_2 --scenario_name formation_hd_env --num_agents 2 --n_rollout_threads 32 --n_rollout_threads 32 --episode_length 25 --lr 7e-4 --update_interval 1  # 32(run11) 8(run12) 1(run10)
+    python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_2 --scenario_name formation_hd_boundless_env --num_agents 2 --n_rollout_threads 32 --n_rollout_threads 32 --episode_length 25 --lr 7e-4 --update_interval 1  # 32(run11) 8(run12) 1(run10)
     # formation HD with 4 agents
     CUDA_VISIBLE_DEVICES=7 python train.py --env_name formation --algorithm_name maddpg --experiment_name hd_4 --scenario_name formation_hd_env --num_agents 4 --n_rollout_threads 128
     # formation HD with 9 agents
@@ -143,8 +158,6 @@
     # formation obstacles with 4 agents
     python render.py --env_name formation --algorithm_name maddpg --experiment_name obs_4 --scenario_name formation_hd_obs_env --num_agents 4 --n_rollout_threads 1 --model_dir /Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/results/formation_hd_obs_env/maddpg/obs_4/run3/models/
     ```
-
-    
 
 * Issues:
 

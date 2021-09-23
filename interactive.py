@@ -35,6 +35,5 @@ if __name__ == '__main__':
         if args.random: act_n = np.random.uniform(-1, 1, size=np.array(act_n).shape)
         # step environment
         obs_n, reward_n, done_n, _ = env.step(act_n)
-        print('reward:',reward_n)
         # render all agent views
         env.render()

@@ -1,7 +1,7 @@
 import ray
 from ray.tune import run_experiments
 from ray.tune.registry import register_trainable, register_env
-from env import MultiAgentParticleEnv
+from env import MultiAgentParticleEnv, FormationEnv
 import ray.rllib.contrib.maddpg.maddpg as maddpg
 import argparse
 
@@ -32,7 +32,6 @@ def parse_args():
 
     # Environment
     parser.add_argument("--scenario", type=str, default="formation_hd_env",
-                        choices=['basic_formation_env', 'formation_hd_env'],
                         help="name of the scenario script")
     parser.add_argument("--max-episode-len", type=int, default=25,
                         help="maximum episode length")
@@ -84,16 +83,26 @@ def main(args):
     )
     register_trainable("MADDPG", MADDPGAgent)
 
-    def env_creater(mpe_args):
-        return MultiAgentParticleEnv(**mpe_args)
+    if 'formation' not in args.scenario:
+        def env_creater(mpe_args):
+            return MultiAgentParticleEnv(**mpe_args)
 
-    register_env("mpe", env_creater)
+        register_env("mpe", env_creater)
 
-    env = env_creater({
-        "scenario_name": args.scenario,
-        "benchmark": False,
-        "num_agents": args.num_agents,
-    })
+        env = env_creater({
+            "scenario_name": args.scenario
+        })
+    else: 
+        def env_creater(mpe_args):
+            return FormationEnv(**mpe_args)
+
+        register_env("mpe", env_creater)
+
+        env = env_creater({
+            "scenario_name": args.scenario,
+            'benchmark': False, 
+            'num_agents': 3
+        })
 
     def gen_policy(i):
         use_local_critic = [

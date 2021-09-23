@@ -120,7 +120,7 @@ def run(config):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--env_id", default='formation_hd_env', type = str, help="Name of environment", )
+    parser.add_argument("--env_id", default='simple_spread', type = str, help="Name of environment", )
     parser.add_argument("--model_name", default='model', type = str, help="Name of directory to store " +
                              "model/training contents")
     parser.add_argument("--seed", default=1, type=int, help="Random seed")

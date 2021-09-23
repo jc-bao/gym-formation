@@ -308,6 +308,7 @@ class World(object):
         # softmax penetration
         k = self.contact_margin
         penetration = np.logaddexp(0, -(dist - dist_min)/k)*k
+        if dist < 0.01: print(dist,entity_a.name, entity_a.state.p_pos, entity_b.name,entity_b.state.p_pos)
         force = self.contact_force * delta_pos / dist * penetration
         # print('force:', force, ' penetration: ', penetration, ' dist: ', dist)
         if entity_a.movable and entity_b.movable:

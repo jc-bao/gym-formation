@@ -26,10 +26,10 @@ class MADDPG:
         self.critic_optim = torch.optim.Adam(self.critic_network.parameters(), lr=self.args.lr_critic)
 
         # create the dict for store the model
-        if not os.path.exists(self.args.save_dir):
-            os.mkdir(self.args.save_dir)
+        if not os.path.exists('results/' + self.args.save_dir):
+            os.mkdir('results/' + self.args.save_dir)
         # path to save the model
-        self.model_path = self.args.save_dir + '/' + self.args.scenario_name
+        self.model_path = 'results/' + self.args.save_dir + '/' + self.args.scenario_name
         if not os.path.exists(self.model_path):
             os.mkdir(self.model_path)
         self.model_path = self.model_path + '/' + 'agent_%d' % agent_id
@@ -37,8 +37,8 @@ class MADDPG:
             os.mkdir(self.model_path)
 
         # load model
-        actor_fullpath = self.model_path + '/'+str(args.model_idx)+'_actor_params.pkl'
-        critic_fullpath = self.model_path + '/'+str(args.model_idx)+'_critic_params.pkl'
+        actor_fullpath = self.model_path + '/actor_params.pkl'
+        critic_fullpath = self.model_path + '/critic_params.pkl'
         if os.path.exists(actor_fullpath):
             self.actor_network.load_state_dict(torch.load(actor_fullpath))
             self.critic_network.load_state_dict(torch.load(critic_fullpath))
@@ -106,13 +106,13 @@ class MADDPG:
 
     def save_model(self, train_step):
         num = str(train_step // self.args.save_rate)
-        model_path = os.path.join(self.args.save_dir, self.args.scenario_name)
+        model_path = os.path.join('results/'+self.args.save_dir, self.args.scenario_name)
         if not os.path.exists(model_path):
             os.makedirs(model_path)
         model_path = os.path.join(model_path, 'agent_%d' % self.agent_id)
         if not os.path.exists(model_path):
             os.makedirs(model_path)
-        torch.save(self.actor_network.state_dict(), model_path + '/' + num + '_actor_params.pkl')
-        torch.save(self.critic_network.state_dict(),  model_path + '/' + num + '_critic_params.pkl')
+        torch.save(self.actor_network.state_dict(), model_path + '/'  + 'actor_params.pkl')
+        torch.save(self.critic_network.state_dict(),  model_path + '/' + 'critic_params.pkl')
 
 
