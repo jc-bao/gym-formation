@@ -72,6 +72,9 @@ def parse_args():
     parser.add_argument("--num-envs-per-worker", type=int, default=4)
     parser.add_argument("--num-gpus", type=int, default=0)
 
+    # extra 
+    parser.add_argument("--num-agents", type=int, default=3)
+
     return parser.parse_args()
 
 
@@ -101,7 +104,7 @@ def main(args):
         env = env_creater({
             "scenario_name": args.scenario,
             'benchmark': False, 
-            'num_agents': 3
+            'num_agents': args.num_agents
         })
 
     def gen_policy(i):

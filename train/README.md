@@ -100,9 +100,9 @@
     # train simple spread
     python main.py --scenario simple_spread --num-gpus 1 --num-workers 4 --num-envs-per-worker 4  --sample-batch-size 6
     # train formation with 4 agents
-    python main.py --scenario=formation_hd_env --agent-num 4 --num-gpus 1 --num-workers 1 --num-envs-per-worker 4  --sample-batch-size 25
-    python main.py --scenario=formation_hd_env --agent-num 4 --num-gpus 1 --num-workers 4 --num-envs-per-worker 4  --sample-batch-size 6
-    python main.py --scenario=formation_hd_env --agent-num 4 --num-gpus 1 --num-workers 8 --num-envs-per-worker 4  --sample-batch-size 4
+    python main.py --scenario=formation_hd_env --num-agents 4 --num-gpus 1 --num-workers 1 --num-envs-per-worker 4  --sample-batch-size 25
+    python main.py --scenario=formation_hd_env --num-agents 4 --num-gpus 1 --num-workers 4 --num-envs-per-worker 4  --sample-batch-size 6
+    python main.py --scenario=formation_hd_env --num-agents 4 --num-gpus 1 --num-workers 8 --num-envs-per-worker 4  --sample-batch-size 4
     
     ```
 
