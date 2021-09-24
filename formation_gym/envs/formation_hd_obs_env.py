@@ -2,7 +2,7 @@ import numpy as np
 from scipy.spatial.distance import directed_hausdorff
 
 from formation_gym.scenario import BaseScenario
-from formation_gym.core import World, Agent, Landmark
+from formation_gym.core import World, Agent, Landmark, Wall
 
 '''
 use Hausdorff distance as reward function
@@ -11,7 +11,7 @@ add obstables into consideration
 '''
 
 class Scenario(BaseScenario):
-    def make_world(self, num_agents = 3, num_landmarks = 3, num_obstacles = 3, world_length = 50):
+    def make_world(self, num_agents = 4, num_landmarks = 4, num_obstacles = 3, world_length = 50):
         self.num_agents = num_agents
         self.num_landmarks = num_landmarks
         self.num_obstacles = num_obstacles
@@ -26,7 +26,7 @@ class Scenario(BaseScenario):
             agent.name = 'agent %d' % i
             agent.collide = True
             agent.silent = True
-            agent.size = 0.08
+            agent.size = 0.1
         # landmark and obstacles properties
         world.landmarks = [Landmark() for i in range(num_landmarks + num_obstacles)]
         for i, landmark in enumerate(world.landmarks):
@@ -42,6 +42,12 @@ class Scenario(BaseScenario):
                 landmark.collide = True 
                 landmark.movable = True
                 landmark.size = 0.15
+        # setup walls 
+        # world.walls = []
+        # world.walls.append(Wall(orient='H',axis_pos=2.6,endpoints=(-2.2, 2.2),width=0.2,hard=True))
+        # world.walls.append(Wall(orient='H',axis_pos=-2.6,endpoints=(-2.2, 2.2),width=0.2,hard=True))
+        # world.walls.append(Wall(orient='V',axis_pos=2.2,endpoints=(-10, 10),width=0.2,hard=True))
+        # world.walls.append(Wall(orient='V',axis_pos=-2.2,endpoints=(-10, 10),width=0.2,hard=True))
         # initial conditions
         self.reset_world(world)
         return world
@@ -71,14 +77,15 @@ class Scenario(BaseScenario):
         v = v - np.mean(v, 0)
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
         # set boundary
-        self.set_bound(world)
+        # self.set_bound(world)
         # change landmark pos and color
         for i, landmark in enumerate(world.landmarks):
             if i < self.num_landmarks:
                 delta = [0, 0]
                 landmark.state.p_pos += delta
             else:
-                landmark.state.p_vel = np.array([0, -1])
+                if landmark.state.p_pos > -2.2:
+                     landmark.state.p_vel = np.array([0, -1])
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
@@ -93,16 +100,16 @@ class Scenario(BaseScenario):
     def reset_world(self, world):
         # agent
         for agent in world.agents:
-            agent.color = np.array([0.35, 0.35, 0.85])
+            agent.color = np.array([0.65, 0.65, 0.85])
             agent.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
             agent.state.p_vel = np.zeros(world.dim_p)
             agent.state.c = np.zeros(world.dim_c)
         # landmark
         for i, landmark in enumerate(world.landmarks):
-            step = np.linspace(-2, 2, self.num_obstacles+1)
+            step = np.linspace(-1.8, 1.8, self.num_obstacles+1)
             # setup landmarks
             if i <self.num_landmarks:
-                landmark.color = np.array([0, 0.3, 0])
+                landmark.color = np.array([0, 0.6, 0])
                 landmark.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
                 landmark.state.p_vel = np.zeros(world.dim_p)
             # setup obstacles
