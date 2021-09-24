@@ -45,10 +45,10 @@
     | --scenario-name=formation_hd_env --num-agents 3              | --scenario-name=formation_hd_env --num-agents 4              | --scenario-name=formation_hd_partial_env --num-agents 4 --save-dir model_hd_par_4 |
     | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
     | ![Sep-23-2021 13-42-30](https://tva1.sinaimg.cn/large/008i3skNly1guqidc3ox4g60iu0j07c702.gif) | ![002](https://tva1.sinaimg.cn/large/008i3skNly1guqiapgnyrg60iu0j012k02.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumq7zonu8g60iu0j0wkq02.gif) |
-    | ![image-20210923134622867](https://tva1.sinaimg.cn/large/008i3skNly1guqih3g8tuj60y80p2gmw02.jpg) | ![image-20210923134652779](https://tva1.sinaimg.cn/large/008i3skNly1guqihh5om5j60xk0o8ab302.jpg) | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq89gyv6j60hs0dcmy002.jpg) |
-    | **--scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 --max-episode-len 50 --evaluate-episode-len 50** |                                                              |                                                              |
+    | ![image-20210923134622867](https://tva1.sinaimg.cn/large/008i3skNly1guqih3g8tuj60y80p2gmw02.jpg) | ![image-20210924105854969](https://tva1.sinaimg.cn/large/008i3skNly1gurj90uqkrj60xm0nkmyh02.jpg) | Setting1: observe the most colse agent, unobservable agent set to 0<br />![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq89gyv6j60hs0dcmy002.jpg)<br />Setting2: observe fixed 2 agent<br />![image-20210924105614202](https://tva1.sinaimg.cn/large/008i3skNly1gurj69y3rsj60m00famy802.jpg)<br /> |
+    | **--scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 --max-episode-len 50 --evaluate-episode-len 50** | --scenario-name=formation_hd_env --num-agents 6              |                                                              |
     | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumqagt0mmg60iu0j07e502.gif) |                                                              |                                                              |
-    | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq6thy8xj60hs0dc0ti02.jpg)Only learning how to escape [Try smaller and more obstacles] |                                                              |                                                              |
+    | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq6thy8xj60hs0dc0ti02.jpg)Only learning how to escape [Try smaller and more obstacles] | ![image-20210924105744094](https://tva1.sinaimg.cn/large/008i3skNly1gurj7u57zxj60ym0nkmyp02.jpg) |                                                              |
 
     
 
@@ -100,7 +100,7 @@
     # train simple spread
     python main.py --scenario simple_spread --num-gpus 1 --num-workers 4 --num-envs-per-worker 4  --sample-batch-size 6
     # train formation with 4 agents
-    python main.py --scenario=formation_hd_env --num-agents 4 --num-gpus 1 --num-workers 1 --num-envs-per-worker 4  --sample-batch-size 25
+    CUDA_VISIBLE_DEVICES=0 python main.py --scenario=formation_hd_boundless_env --num-agents 4 --num-workers 4 --num-envs-per-worker 4  --sample-batch-size 25
     python main.py --scenario=formation_hd_env --num-agents 4 --num-gpus 1 --num-workers 4 --num-envs-per-worker 4  --sample-batch-size 6
     python main.py --scenario=formation_hd_env --num-agents 4 --num-gpus 1 --num-workers 8 --num-envs-per-worker 4  --sample-batch-size 4
     

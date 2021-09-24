@@ -63,7 +63,7 @@ class Scenario(BaseScenario):
         #     other_pos[i] = np.zeros(world.dim_p)
         # way2: remove the far obs
         # other_pos = other_pos[idx[:self.num_obs]]
-        return np.concatenate([agent.state.p_vel]+[agent.state.p_pos]+entity_pos + other_pos + comm)
+        return np.concatenate([agent.state.p_vel]+entity_pos + other_pos + comm)
 
     def reward(self, agent, world):
         rew = 0

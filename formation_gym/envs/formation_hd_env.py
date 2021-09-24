@@ -45,7 +45,7 @@ class Scenario(BaseScenario):
             if other is agent: continue
             comm.append(other.state.c)
             other_pos.append(other.state.p_pos - agent.state.p_pos)
-        return np.concatenate([agent.state.p_vel]+[agent.state.p_pos]+entity_pos + other_pos + comm)
+        return np.concatenate([agent.state.p_vel]+entity_pos + other_pos + comm)
 
     def reward(self, agent, world):
         rew = 0
@@ -61,7 +61,7 @@ class Scenario(BaseScenario):
             world.landmarks[i].state.p_pos += delta
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
-        self.set_bound(world)
+        # self.set_bound(world)
         if agent.collide:
             for a in world.agents:
                 if agent!=a and self.is_collision(a, agent):
