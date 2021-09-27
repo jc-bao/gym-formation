@@ -84,8 +84,9 @@ class Scenario(BaseScenario):
                 delta = [0, 0]
                 landmark.state.p_pos += delta
             else:
-                if landmark.state.p_pos > -2.2:
+                if landmark.state.p_pos[1] > -2.2:
                      landmark.state.p_vel = np.array([0, -1])
+                else: landmark.state.p_vel = np.array([0, 0])
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
@@ -147,6 +148,6 @@ class Scenario(BaseScenario):
 
     def set_bound(self, world):
         for agent in world.agents:
-            agent.state.p_pos = np.clip(agent.state.p_pos, [-2, -10], [2, 10])
+            agent.state.p_pos = np.clip(agent.state.p_pos, [-2.5, -20], [2.5, 20])
         for landmark in world.landmarks[self.num_landmarks:]:
-            landmark.state.p_pos = np.clip(landmark.state.p_pos, [-2, -10], [2, 10])
+            landmark.state.p_pos = np.clip(landmark.state.p_pos, [-2.5, -20], [2.5, 20])

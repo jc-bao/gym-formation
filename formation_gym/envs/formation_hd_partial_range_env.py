@@ -12,8 +12,8 @@ partial observation environment
 '''
 
 class Scenario(BaseScenario):
-    def make_world(self, num_agents = 5, num_landmarks = 5, num_obs = 3, world_length = 25):
-        self.num_obs = num_obs
+    def make_world(self, num_agents = 4, num_landmarks = 4, obs_range = 0.7, world_length = 25):
+        self.obs_range = obs_range
         self.num_agents = num_agents
         # world properties
         world = World()
@@ -46,23 +46,11 @@ class Scenario(BaseScenario):
         # agent pos & communication
         other_pos = []
         comm = []
-        # way3: watch for 2 guys
-        # get agent ID
-        agent_id = int(agent.name.split()[-1])
-        idx = [i % self.num_agents for i in range(agent_id+1, agent_id+1 + self.num_obs)]
-        for i in idx:
-            other_pos.append(world.agents[i].state.p_pos - agent.state.p_pos)
+        # set range for watching
         for other in world.agents:
             if other is agent: continue
             comm.append(other.state.c)
-        # make the furthest point to zero
-        # way1: make the far observation to zero
-        # others_dist = np.linalg.norm(other_pos, axis = 1)
-        # idx = np.argpartition(others_dist, self.num_obs)
-        # for i in idx[self.num_obs:]:
-        #     other_pos[i] = np.zeros(world.dim_p)
-        # way2: remove the far obs
-        # other_pos = other_pos[idx[:self.num_obs]]
+            other_pos.append(np.clip(other.state.p_pos - agent.state.p_pos, [-self.obs_range, -self.obs_range], [self.obs_range, self.obs_range]))
         return np.concatenate([agent.state.p_vel]+entity_pos + other_pos + comm)
 
     def reward(self, agent, world):

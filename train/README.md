@@ -20,14 +20,27 @@
   * Train
 
      ```
+     python main.py --scenario-name=formation_hd_env --num-agents 5 --save-dir model_hd_5 --time-steps 2000000 --max-episode-len 30
      # training formation with 6 agents
-     python main.py --scenario-name=formation_hd_env --num-agents 6 --save-dir model_hd_6 --time-steps 2000000 --max-episode-len 40  
+     
+     python main.py --scenario-name=formation_hd_env --num-agents 6 --save-dir model_hd_6 --time-steps 2000000 --max-episode-len 40 --time-steps 2000000
+     
+     python main.py --scenario-name=formation_hd_env --num-agents 7 --save-dir model_hd_7 --time-steps 3000000 --max-episode-len 50
+     
+     python main.py --scenario-name=formation_hd_env --num-agents 8 --save-dir model_hd_8 --time-steps 4000000 --max-episode-len 50
+     
+     python main.py --scenario-name=formation_hd_env --num-agents 9 --save-dir model_hd_9 --time-steps 4000000 --max-episode-len 50
+     
+     
+     
      # training formation with 4 agents
      python main.py --scenario-name=formation_hd_env --num-agents 4 --save-dir model_hd_4
+     
      # training formation with partial observation (4 agents)
-     python main.py --scenario-name=formation_hd_partial_env --num-agents 4 --save-dir model_hd_par_4
+     python main.py --scenario-name=formation_hd_partial_env --num-agents 5 --save-dir model_hd_par_5 --time-steps 3000000 --max-episode-len 25 --evaluate-episode-len 25
+     
      # training formation with obstacles (4 agents)
-     python main.py --scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 --max-episode-len 50 --evaluate-episode-len 50
+     python main.py --scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 
      ```
   
   * Evaluate 
@@ -128,6 +141,20 @@
 * Pros:
 
 * Cons:
+
+* Tensorboard information:
+
+  * Train `simple_spread`
+
+  | Actor_grad_norm: gradient norm for actor update              | Individual reward: one agent's reward                        | Average Episode Reward                                       |
+  | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+  | ![image-20210926135104951](https://tva1.sinaimg.cn/large/008i3skNly1gutzgt9k0zj607z05nwek02.jpg) | ![image-20210926135140704](https://tva1.sinaimg.cn/large/008i3skNly1gutzhdw105j607t05mjrg02.jpg) | ![image-20210926135234454](https://tva1.sinaimg.cn/large/008i3skNly1gutzibneuoj608005qmxc02.jpg) |
+  | The norm for critic to update                                | dist_entropy: action entropies (more high means more chance to explore) | policy loss: TD Error * Action ratio                         |
+  | ![image-20210926135258174](https://tva1.sinaimg.cn/large/008i3skNly1gutziq3dwvj608905n0sq02.jpg) | ![image-20210926135827132](https://tva1.sinaimg.cn/large/008i3skNly1gutzofosd9j607x05iwek02.jpg) | ![image-20210926143335221](https://tva1.sinaimg.cn/large/008i3skNly1guu0ozx87ij608205naa902.jpg) |
+  | Ratio: difference bewteen two actions                        | value loss: loss of value function(TD Error)                 |                                                              |
+  | ![image-20210926143353065](https://tva1.sinaimg.cn/large/008i3skNly1guu0pb4d9lj607s05i3yh02.jpg) | ![image-20210926143405114](https://tva1.sinaimg.cn/large/008i3skNly1guu0piruodj607i05ojrg02.jpg) |                                                              |
+
+  
 
 * Use cases:
 
