@@ -7,7 +7,7 @@ from pathlib import Path
 
 import torch
 
-from .config import get_config
+from config import get_config
 
 from onpolicy.envs.env_wrappers import SubprocVecEnv, DummyVecEnv
 
@@ -17,7 +17,7 @@ def make_render_env(all_args):
     def get_env_fn(rank):
         def init_env():
             if all_args.env_name == "MPE":
-                env = formation_gym.make_env(all_args.scenario_name, True , all_args.num_agents)
+                env = formation_gym.make_env(all_args.scenario_name, False , all_args.num_agents)
             else:
                 print("Can not support the " +
                       all_args.env_name + "environment.")

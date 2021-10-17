@@ -50,7 +50,7 @@ def make_eval_env(all_args):
 
 def parse_args(args, parser):
     parser.add_argument('--scenario_name', type=str,
-                        default='simple_spread', help="Which scenario to run on")
+                        default='formation_hd_env', help="Which scenario to run on")
     parser.add_argument("--num_landmarks", type=int, default=3)
     parser.add_argument('--num_agents', type=int,
                         default=3, help="number of agents")
@@ -133,8 +133,8 @@ def main(args):
               "run_dir": run_dir
               }
 
-    runner = Runner(config=config, render = True)
-    runner.eval()
+    runner = Runner(config=config)
+    runner.eval(render = True)
 
     env.close()
     if all_args.use_eval and (eval_env is not env):

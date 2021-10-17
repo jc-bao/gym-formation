@@ -37,8 +37,8 @@ class MADDPG:
             os.mkdir(self.model_path)
 
         # load model
-        actor_fullpath = self.model_path + '/actor_params.pkl'
-        critic_fullpath = self.model_path + '/critic_params.pkl'
+        actor_fullpath = self.model_path + '/99_actor_params.pkl'
+        critic_fullpath = self.model_path + '/99_critic_params.pkl'
         if os.path.exists(actor_fullpath):
             self.actor_network.load_state_dict(torch.load(actor_fullpath))
             self.critic_network.load_state_dict(torch.load(critic_fullpath))

@@ -215,7 +215,6 @@ class MultiAgentEnv(gym.Env):
                         action[0][p] = 1.0
                     agent.action.u = action[0][0:self.world.dim_p]
                     d = self.world.dim_p
-
             sensitivity = 5.0
             if agent.accel is not None:
                 sensitivity = agent.accel

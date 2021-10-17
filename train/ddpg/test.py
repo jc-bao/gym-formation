@@ -57,6 +57,6 @@ print(f'Finished training! Use {result["duration"]}')
 
 # save policy
 torch.save(policy.state_dict(), 'models/dqn.pth')
-
+# policy.load_state_dict(torch.load('dqn.pth'))
 # evaluate
 test_collector.collect(n_episode = 1, render = 1/30)

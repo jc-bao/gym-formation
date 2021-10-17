@@ -60,7 +60,7 @@
     | ![Sep-23-2021 13-42-30](https://tva1.sinaimg.cn/large/008i3skNly1guqidc3ox4g60iu0j07c702.gif) | ![002](https://tva1.sinaimg.cn/large/008i3skNly1guqiapgnyrg60iu0j012k02.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumq7zonu8g60iu0j0wkq02.gif) |
     | ![image-20210923134622867](https://tva1.sinaimg.cn/large/008i3skNly1guqih3g8tuj60y80p2gmw02.jpg) | ![image-20210924105854969](https://tva1.sinaimg.cn/large/008i3skNly1gurj90uqkrj60xm0nkmyh02.jpg) | Setting1: observe the most colse agent, unobservable agent set to 0<br />![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq89gyv6j60hs0dcmy002.jpg)<br />Setting2: observe fixed 2 agent<br />![image-20210924105614202](https://tva1.sinaimg.cn/large/008i3skNly1gurj69y3rsj60m00famy802.jpg)<br /> |
     | **--scenario-name=formation_hd_obs_env --num-agents 4 --save-dir model_hd_obs_4 --max-episode-len 50 --evaluate-episode-len 50** | --scenario-name=formation_hd_env --num-agents 6              |                                                              |
-    | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumqagt0mmg60iu0j07e502.gif) |                                                              |                                                              |
+    | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumqagt0mmg60iu0j07e502.gif) | ![Large GIF (678x684)](https://tva1.sinaimg.cn/large/008i3skNly1gumq7zonu8g60iu0j0wkq02.gif) |                                                              |
     | ![plt](https://tva1.sinaimg.cn/large/008i3skNly1gumq6thy8xj60hs0dc0ti02.jpg)Only learning how to escape [Try smaller and more obstacles] | ![image-20210924105744094](https://tva1.sinaimg.cn/large/008i3skNly1gurj7u57zxj60ym0nkmyp02.jpg) |                                                              |
 
     
@@ -184,6 +184,8 @@
     python render.py --env_name formation --algorithm_name maddpg --experiment_name hd_9 --scenario_name formation_hd_env --num_agents 9 --buffer_size 10 --n_rollout_threads 1 --model_dir /Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/results/formation_hd_env/maddpg/hd_9/run1/models/
     # formation obstacles with 4 agents
     python render.py --env_name formation --algorithm_name maddpg --experiment_name obs_4 --scenario_name formation_hd_obs_env --num_agents 4 --n_rollout_threads 1 --model_dir /Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/results/formation_hd_obs_env/maddpg/obs_4/run3/models/
+    
+    python render.py --env_name formation --algorithm_name rmaddpg --experiment_name hd_5 --scenario_name formation_hd_env --num_agents 5 --n_rollout_threads 1 --episode_length 25 --model_dir /Users/reedpan/Desktop/Research/gym_formation/train/maddpg-v5/results/formation_hd_env/rmaddpg/hd_5/run1/models/
     ```
 
 * Issues:
@@ -234,9 +236,10 @@
 
 * Result:
 
-  | Formation_hd_env                                             |      |      |      |
-  | ------------------------------------------------------------ | ---- | ---- | ---- |
-  | Agent_num = 9 run=11                                         |      |      |      |
-  | ![image-20210919113701695](https://tva1.sinaimg.cn/large/008i3skNly1guls972v8rj60jo05jaa802.jpg) |      |      |      |
-
+  | Formation_hd_env |      |      |      |
+  | ---------------- | ---- | ---- | ---- |
+  | Agent=3          |      |      |      |
+  |                  |      |      |      |
+  |                  |      |      |      |
+  
   
