@@ -206,7 +206,7 @@
 
   
 
-## MAPPO[Not converge]
+## [MAPPO](https://github.com/zoeyuchao/mappo)
 
 * Overview: MAPPO algorithm which support parallel.
 
@@ -236,10 +236,6 @@
 
 * Result:
 
-  | Formation_hd_env |      |      |      |
-  | ---------------- | ---- | ---- | ---- |
-  | Agent=3          |      |      |      |
-  |                  |      |      |      |
-  |                  |      |      |      |
+<iframe src="https://wandb.ai/jc-bao/MPE/reports/Train-Formation-HD-with-MAPPO--VmlldzoxMjE5NTE2" style="border:none;height:1024px;width:100%">
   
   
