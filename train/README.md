@@ -236,6 +236,6 @@
 
 * Result:
 
-<iframe src="https://wandb.ai/jc-bao/MPE/reports/Train-Formation-HD-with-MAPPO--VmlldzoxMjE5NTE2" style="border:none;height:1024px;width:100%">
+<iframe src="https://wandb.ai/jc-bao/MPE/reports/Train-Formation-HD-with-MAPPO--VmlldzoxMjE5NTE2" style="border:none;height:1024px;width:100%"/>
   
   
