@@ -110,4 +110,6 @@ venv.bak/
 # training folder
 results/
 ray_results/
+logs/
+log/
 formation_gym.egg-info/
