@@ -16,26 +16,22 @@ def make_env(scenario_name='basic_formation_env', benchmark=False, num_agents = 
         env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, shared_viewer = True)
     return env
 
-def ezpolicy(world):
-    eps = 0.02
+def ezpolicy(obs_n):
+    num_agents = len(obs_n)
     act_n = []
-    u = np.zeros(5) # 5-d because of no-move action
-    for i in range(len(world.agents)):
-        move1 = True
-        move2 = True
-        delta = abs(world.agents[i].state.p_pos - world.landmarks[i].state.p_pos)
-        coee = 0.5
-        if -(world.agents[i].state.p_pos[0] - world.landmarks[i].state.p_pos[0])>eps: 
-            u[1] += coee*delta[0]
-        elif (world.agents[i].state.p_pos[0] - world.landmarks[i].state.p_pos[0])>eps: 
-            u[2] += coee*delta[0]
-        else: move1 = False
-        if -(world.agents[i].state.p_pos[1] - world.landmarks[i].state.p_pos[1])>eps: 
-            u[3] += coee*delta[1]
-        elif (world.agents[i].state.p_pos[1] - world.landmarks[i].state.p_pos[1])>eps: 
-            u[4] += coee*delta[1]
-        else: move2 = False
-        u[0] += 1.0
-        act_n.append(np.concatenate([u, np.zeros(world.dim_c)]))
-    done = not (move1 and move2)
-    return done, act_n
+    for i,obs in enumerate(obs_n):
+        # get info from observation
+        print(obs)
+        p_vel = obs[:2]
+        other_pos = obs[2:2*num_agents]
+        ideal_shape = obs[2*num_agents+4:4*num_agents+4]
+        ideal_shape = np.reshape(ideal_shape, (-1, 2))
+        ideal_vel = obs[-1]
+        # calculate relative formation
+        current_shape = np.insert(other_pos, i*2, [0,0])
+        current_shape = np.reshape(current_shape, (-1,2))
+        current_shape -= np.mean(current_shape, axis = 0)
+        # get action
+        act = np.clip(ideal_shape[i] - current_shape[i], -1, 1)
+        act_n.append(act)
+    return act_n

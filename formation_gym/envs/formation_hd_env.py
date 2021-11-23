@@ -46,8 +46,8 @@ class Scenario(BaseScenario):
         comm = np.array([])
         for other in world.agents:
             if other is agent: continue
-            np.append(comm, other.state.c)
-            np.append(other_pos, other.state.p_pos - agent.state.p_pos)
+            comm = np.append(comm, other.state.c)
+            other_pos = np.append(other_pos, other.state.p_pos - agent.state.p_pos)
         return np.concatenate((agent.state.p_vel, other_pos, comm, self.ideal_shape.flatten(), self.ideal_vel))
 
     def reward(self, agent, world):

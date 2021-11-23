@@ -17,14 +17,9 @@ if __name__ == '__main__':
     obs_n = env.reset()
     cnt = 0
     while True:
-        # query for action from each agent's policy
-        act_n = []
         # demo policy
         if args.demo:
-            done, act_n = formation_gym.ezpolicy(env.world)
-            if not done: cnt+=1
-            else:
-                print('total steps: ', cnt)
+            act_n = formation_gym.ezpolicy(obs_n)
         # random policy
         elif args.random: 
             act_n = [space.sample() for space in env.action_space]
