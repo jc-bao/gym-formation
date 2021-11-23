@@ -16,7 +16,7 @@ class MultiAgentEnv(gym.Env):
     def __init__(self, world, reset_callback=None, reward_callback=None,
                  observation_callback=None, info_callback=None,
                  done_callback=None, post_step_callback=None,
-                 shared_viewer=True, discrete_action=True):
+                 shared_viewer=True, discrete_action=False):
 
         self.world = world
         self.world_length = self.world.world_length
@@ -36,7 +36,7 @@ class MultiAgentEnv(gym.Env):
         self.post_step_callback = post_step_callback
 
         # environment parameters
-        # self.discrete_action_space = True
+        # self.discrete_action_space = True -> use number to control
         self.discrete_action_space = discrete_action
 
         # if true, action is a number 0...N, otherwise action is a one-hot N-dimensional vector
@@ -191,7 +191,7 @@ class MultiAgentEnv(gym.Env):
         action = [action]
         if agent.movable:
             # physical action
-            if self.discrete_action_input:
+            if self.discrete_action_input: # use number
                 agent.action.u = np.zeros(self.world.dim_p)
                 # process discrete action
                 if action[0] == 1:
@@ -203,7 +203,7 @@ class MultiAgentEnv(gym.Env):
                 if action[0] == 4:
                     agent.action.u[1] = +1.0
                 d = self.world.dim_p
-            else:
+            else: # use one-hot
                 if self.discrete_action_space:
                     agent.action.u[0] += action[0][1] - action[0][2]
                     agent.action.u[1] += action[0][3] - action[0][4]
@@ -363,7 +363,6 @@ class MultiAgentEnv(gym.Env):
             if self.shared_viewer:
                 u = [a.state.p_pos for a in self.agents]
                 pos = np.mean(u, 0)
-                pos = np.zeros(self.world.dim_p)
             else:
                 pos = self.agents[i].state.p_pos
             self.viewers[i].set_bounds(

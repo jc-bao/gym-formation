@@ -35,33 +35,31 @@ class Scenario(BaseScenario):
         return world
     
     def observation(self, agent, world):
-        # agent pos & communication
-        entity_pos = []
-        for entity in world.landmarks:
-            entity_pos.append(entity.state.p_pos)
-        other_pos = []
-        comm = []
-        for other in world.agents:
-            if other is agent: continue
-            comm.append(other.state.c)
-            other_pos.append(other.state.p_pos - agent.state.p_pos)
-        return np.concatenate([agent.state.p_vel]+entity_pos + other_pos + comm)
-
-    def reward(self, agent, world):
-        rew = 0
+        # change landmark pos for visualization (Note: not necessary for training)
         u = [a.state.p_pos for a in world.agents]
         v = [l.state.p_pos for l in world.landmarks]
         delta = np.mean(u, 0) - np.mean(v, 0)
-        u = u - np.mean(u, 0)
-        v = v - np.mean(v, 0)
-        rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
-        # change landmark pos and color
         for i in range(len(world.landmarks)):
-            delta = [0, 0]
-            world.landmarks[i].state.p_pos += delta
-            # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
-            # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
-        # self.set_bound(world)
+            world.landmarks[i].state.p_pos += delta # synchronize the center of landmarks and agents
+        # agent pos & communication
+        other_pos = np.array([])
+        comm = np.array([])
+        for other in world.agents:
+            if other is agent: continue
+            np.append(comm, other.state.c)
+            np.append(other_pos, other.state.p_pos - agent.state.p_pos)
+        return np.concatenate((agent.state.p_vel, other_pos, comm, self.ideal_shape.flatten(), self.ideal_vel))
+
+    def reward(self, agent, world):
+        # part1: formation reward: define by hausdorff distance
+        rew = 0
+        agent_shape = [a.state.p_pos for a in world.agents]
+        agent_shape = agent_shape - np.mean(agent_shape, 0)
+        rew = -max(directed_hausdorff(agent_shape, self.ideal_shape)[0], directed_hausdorff(self.ideal_shape, agent_shape)[0])
+        # part2: velocity reward: define by overall velocity difference
+        mean_vel = np.mean([a.state.p_vel for a in world.agents], axis = 0)
+        rew -= np.linalg.norm(self.ideal_vel - mean_vel)
+        # part3: collision
         if agent.collide:
             for a in world.agents:
                 if agent!=a and self.is_collision(a, agent):
@@ -76,10 +74,16 @@ class Scenario(BaseScenario):
             agent.state.p_vel = np.zeros(world.dim_p)
             agent.state.c = np.zeros(world.dim_c)
         # landmark
+        self.ideal_shape = []
         for landmark in world.landmarks:
             landmark.color = np.array([0.25, 0.25, 0.25])
-            landmark.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
+            pos = np.random.uniform(-1, +1, world.dim_p)
+            self.ideal_shape.append(pos)
+            landmark.state.p_pos = pos
             landmark.state.p_vel = np.zeros(world.dim_p)
+        self.ideal_shape = self.ideal_shape - np.mean(self.ideal_shape, 0)
+        # ideal velocity
+        self.ideal_vel = np.random.uniform(-1, +1, world.dim_p)
 
     def benchmark_data(self, agent, world):
         # get data to debug
@@ -106,8 +110,3 @@ class Scenario(BaseScenario):
     def is_collision(self, agent1, agent2):
         dist = np.linalg.norm(agent1.state.p_pos - agent2.state.p_pos)
         return dist < (agent1.size + agent2.size)/2
-
-    def set_bound(self, world):
-        for agent in world.agents:
-            agent.state.p_pos = np.clip(agent.state.p_pos, [-2, -2], [2, 2])
-

@@ -6,6 +6,9 @@ import random
 import torch
 import formation_gym
 
+'''
+action = [0.1, 0.2, 0.4, 0.1, 0.2]
+'''
 
 if __name__ == '__main__':
     # get the params
@@ -16,7 +19,7 @@ if __name__ == '__main__':
     args.obs_shape = [env.observation_space[i].shape[0] for i in range(args.n_agents)]  # 每一维代表该agent的obs维度
     action_shape = []
     for content in env.action_space:
-        action_shape.append(content.n)
+        action_shape.append(content.shape[0])
     args.action_shape = action_shape[:args.n_agents]  # 每一维代表该agent的act维度
     args.high_action = 1
     args.low_action = -1

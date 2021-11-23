@@ -11,7 +11,7 @@ def make_env(scenario_name='basic_formation_env', benchmark=False, num_agents = 
     world = scenario.make_world(num_agents, num_agents) # use same number of agent and landmarks
     # create multiagent environment
     if benchmark:
-        env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, scenario.benchmark_data, shared_viewer = False)
+        env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, scenario.benchmark_data, shared_viewer = True)
     else:
         env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, shared_viewer = True)
     return env
