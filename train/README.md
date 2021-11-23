@@ -206,7 +206,7 @@
 
   
 
-## MAPPO[Not converge]
+## [MAPPO](https://github.com/zoeyuchao/mappo)
 
 * Overview: MAPPO algorithm which support parallel.
 
@@ -236,10 +236,6 @@
 
 * Result:
 
-  | Formation_hd_env |      |      |      |
-  | ---------------- | ---- | ---- | ---- |
-  | Agent=3          |      |      |      |
-  |                  |      |      |      |
-  |                  |      |      |      |
+![](https://tva1.sinaimg.cn/large/008i3skNly1gwdi60mtroj31gp0u00xf.jpg)
   
   
