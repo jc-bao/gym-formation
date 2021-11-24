@@ -10,26 +10,27 @@ refer to https://www.wikiwand.com/en/Hausdorff_distance#/Applications
 '''
 
 class Scenario(BaseScenario):
-    def make_world(self, num_agents = 3, num_landmarks = 3, episode_length = 25):
+    def make_world(self, num_agents = 3, episode_length = 100):
         # world properties
         world = World()
         world.world_length = episode_length
         world.dim_c = 2 # communication channel
         world.collaborative = True
+        self.num_agents = num_agents
         # agent properties
         world.agents = [Agent() for i in range(num_agents)]
         for i, agent in enumerate(world.agents):
             agent.name = 'agent %d' % i
             agent.collide = True
             agent.silent = True
-            agent.size = 0.08
+            agent.size = 0.03
         # landmark properties
-        world.landmarks = [Landmark() for i in range(num_landmarks)]
+        world.landmarks = [Landmark() for i in range(num_agents)]
         for i, landmark in enumerate(world.landmarks):
             landmark.name = 'landmarks %d' % i
             landmark.collide = False 
             landmark.movable = False
-            landmark.size = 0.02
+            landmark.size = 0.01
         # initial conditions
         self.reset_world(world)
         return world
@@ -38,9 +39,15 @@ class Scenario(BaseScenario):
         # change landmark pos for visualization (Note: not necessary for training)
         u = [a.state.p_pos for a in world.agents]
         v = [l.state.p_pos for l in world.landmarks]
-        delta = np.mean(u, 0) - np.mean(v, 0)
-        for i in range(len(world.landmarks)):
-            world.landmarks[i].state.p_pos += delta # synchronize the center of landmarks and agents
+        delta = np.mean(u,0) - np.mean(v,0)
+        for l in world.landmarks:
+            l.state.p_pos += delta
+        # for i in range(3):
+        #     u = [world.agents[i].state.p_pos for i in range(i*3, (i+1)*3)]
+        #     v = [world.landmarks[i].state.p_pos for i in range(i*3, (i+1)*3)]
+        #     delta = np.mean(u, 0) - np.mean(v, 0)
+        #     for j in range(3):
+        #         world.landmarks[i*3+j].state.p_pos += delta # synchronize the center of landmarks and agents
         # agent pos & communication
         other_pos = np.array([])
         comm = np.array([])
@@ -48,6 +55,7 @@ class Scenario(BaseScenario):
             if other is agent: continue
             comm = np.append(comm, other.state.c)
             other_pos = np.append(other_pos, other.state.p_pos - agent.state.p_pos)
+        foo = [world.agents[i].state.p_pos for i in range(0, 3)]
         return np.concatenate((agent.state.p_vel, other_pos, comm, self.ideal_shape.flatten(), self.ideal_vel))
 
     def reward(self, agent, world):
@@ -68,18 +76,19 @@ class Scenario(BaseScenario):
 
     def reset_world(self, world):
         # agent
-        for agent in world.agents:
+        for i, agent in enumerate(world.agents):
             agent.color = np.array([0.35, 0.35, 0.85])
             agent.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
             agent.state.p_vel = np.zeros(world.dim_p)
             agent.state.c = np.zeros(world.dim_c)
-        # landmark
+        # landmark: use can use `generate_shape` to generate target shape
+        # self.ideal_shape = self.generate_shape(3).reshape(-1,2)
         self.ideal_shape = []
-        for landmark in world.landmarks:
+        for i, landmark in enumerate(world.landmarks):
             landmark.color = np.array([0.25, 0.25, 0.25])
             pos = np.random.uniform(-1, +1, world.dim_p)
             self.ideal_shape.append(pos)
-            landmark.state.p_pos = pos
+            landmark.state.p_pos = self.ideal_shape[i]
             landmark.state.p_vel = np.zeros(world.dim_p)
         self.ideal_shape = self.ideal_shape - np.mean(self.ideal_shape, 0)
         # ideal velocity
@@ -110,3 +119,24 @@ class Scenario(BaseScenario):
     def is_collision(self, agent1, agent2):
         dist = np.linalg.norm(agent1.state.p_pos - agent2.state.p_pos)
         return dist < (agent1.size + agent2.size)/2
+
+    def generate_shape(self, layer, layer_shapes = None):
+        # this is default shape
+        layer_shapes = layer_shapes or np.array([
+            [[0, -1], [0.5, 0], [0, 1]],
+            [[0, 1.6], [-1, 0], [1, 0]],
+            [[1.5, 0], [0, 0], [-1.5, 0]],
+            [[0, 0.6], [1, 0], [-1, 0]],
+        ])
+        num_layers = layer_shapes.shape[0]
+        assert layer < num_layers, 'Layer shape is not enough!'
+        num_agents_per_layer = layer_shapes.shape[1]
+        if layer == 0:
+            return layer_shapes[0]
+        else:
+            old_shape = self.generate_shape(layer-1)
+            shape = np.array([(layer_shapes[layer][i] + old_shape * 0.45) for i in range(num_agents_per_layer)])
+        return shape
+
+if __name__ == '__main__':
+    s = Scenario()
