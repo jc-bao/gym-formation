@@ -26,6 +26,8 @@ Note: use `-r` flag to use random policy.
 
 - [ ] Group: divide the group smartly to reduce formation time. (now the group was previously divided, more layers, less distributional)
 
+- [ ] Location: the esitimation of the position of groups. (now the group was located by inference the center of group by leader's observation)
+
 ## Extend to more agent use hierarchy policy
 
 ```python
