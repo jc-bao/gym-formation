@@ -23,14 +23,14 @@ class Scenario(BaseScenario):
             agent.name = 'agent %d' % i
             agent.collide = True
             agent.silent = True
-            agent.size = 0.03
+            agent.size = 0.1
         # landmark properties
         world.landmarks = [Landmark() for i in range(num_agents)]
         for i, landmark in enumerate(world.landmarks):
             landmark.name = 'landmarks %d' % i
             landmark.collide = False 
             landmark.movable = False
-            landmark.size = 0.01
+            landmark.size = 0.05
         # initial conditions
         self.reset_world(world)
         return world
@@ -42,21 +42,16 @@ class Scenario(BaseScenario):
         delta = np.mean(u,0) - np.mean(v,0)
         for l in world.landmarks:
             l.state.p_pos += delta
-        # for i in range(3):
-        #     u = [world.agents[i].state.p_pos for i in range(i*3, (i+1)*3)]
-        #     v = [world.landmarks[i].state.p_pos for i in range(i*3, (i+1)*3)]
-        #     delta = np.mean(u, 0) - np.mean(v, 0)
-        #     for j in range(3):
-        #         world.landmarks[i*3+j].state.p_pos += delta # synchronize the center of landmarks and agents
-        # agent pos & communication
         other_pos = np.array([])
-        comm = np.array([])
         for other in world.agents:
             if other is agent: continue
-            comm = np.append(comm, other.state.c)
             other_pos = np.append(other_pos, other.state.p_pos - agent.state.p_pos)
-        foo = [world.agents[i].state.p_pos for i in range(0, 3)]
-        return np.concatenate((agent.state.p_vel, other_pos, comm, self.ideal_shape.flatten(), self.ideal_vel))
+        obs = {
+            'observation': np.append(agent.state.p_vel, other_pos),
+            'achieved_goal': np.concatenate(u-np.mean(u,0)),
+            'desired_goal': self.ideal_shape.flatten(),
+        }
+        return obs
 
     def reward(self, agent, world):
         # part1: formation reward: define by hausdorff distance
@@ -78,7 +73,7 @@ class Scenario(BaseScenario):
         # agent
         for i, agent in enumerate(world.agents):
             agent.color = np.array([0.35, 0.35, 0.85])
-            agent.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
+            agent.state.p_pos = np.random.uniform(-1.5, +1.5, world.dim_p)
             agent.state.p_vel = np.zeros(world.dim_p)
             agent.state.c = np.zeros(world.dim_c)
         # landmark: use can use `generate_shape` to generate target shape
@@ -86,8 +81,13 @@ class Scenario(BaseScenario):
         self.ideal_shape = []
         for i, landmark in enumerate(world.landmarks):
             landmark.color = np.array([0.25, 0.25, 0.25])
-            pos = np.random.uniform(-1, +1, world.dim_p)
-            self.ideal_shape.append(pos)
+            while True:
+                pos = np.random.uniform(-1.5, +1.5, world.dim_p)
+                shape = np.array(self.ideal_shape)
+                if len(self.ideal_shape) == 0 or (np.linalg.norm(shape-pos, axis=-1) > 0.3).all():
+                    break
+            self.ideal_shape.append(world.agents[i].state.p_pos.copy())
+            # self.ideal_shape.append(pos)
             landmark.state.p_pos = self.ideal_shape[i]
             landmark.state.p_vel = np.zeros(world.dim_p)
         self.ideal_shape = self.ideal_shape - np.mean(self.ideal_shape, 0)

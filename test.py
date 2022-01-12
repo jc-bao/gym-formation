@@ -17,12 +17,13 @@ if __name__ == '__main__':
     while True:
         # random policy
         if args.random: 
-            act_n = [space.sample() for space in env.action_space]
+            act_n =  env.action_space.sample()
         # demo policy
         else:
             act_n = formation_gym.get_action_BFS(formation_gym.ezpolicy, obs_n, args.num_agents)
         # step environment
         obs_n, reward_n, done_n, _ = env.step(act_n)
+        print(obs_n['observation'].shape, obs_n['achieved_goal'].shape, obs_n['desired_goal'].shape, reward_n)
         if np.all(done_n):
             obs_n = env.reset()
         # render all agent views

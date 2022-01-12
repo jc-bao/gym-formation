@@ -2,13 +2,15 @@ import gym
 from gym import spaces
 from gym.envs.registration import EnvSpec
 import numpy as np
+from scipy.spatial.distance import directed_hausdorff
+from pprint import pprint
 
 # update bounds to center around agent
 cam_range = 2
 
 # environment for all agents in the multiagent world
 # currently code assumes that no agents will be created/destroyed at runtime!
-class MultiAgentEnv(gym.Env):
+class MultiAgentEnv(gym.GoalEnv):
     metadata = {
         'render.modes': ['human', 'rgb_array']
     }
@@ -53,47 +55,12 @@ class MultiAgentEnv(gym.Env):
         self.time = 0
 
         # configure spaces
-        self.action_space = []
-        self.observation_space = []
-        self.share_observation_space = []
-        share_obs_dim = 0
-        for agent in self.agents:
-            total_action_space = []
-            
-            # physical action space
-            if self.discrete_action_space:
-                u_action_space = spaces.Discrete(world.dim_p * 2 + 1)
-            else:
-                u_action_space = spaces.Box(
-                    low=-agent.u_range, high=+agent.u_range, shape=(world.dim_p,), dtype=np.float32)  # [-1,1]
-            if agent.movable:
-                total_action_space.append(u_action_space)
-
-            # communication action space
-            if self.discrete_action_space:
-                c_action_space = spaces.Discrete(world.dim_c)
-            else:
-                c_action_space = spaces.Box(low=0.0, high=1.0, shape=(
-                    world.dim_c,), dtype=np.float32)  # [0,1]
-            
-            if not agent.silent:
-                total_action_space.append(c_action_space)
-            # total action space
-            if len(total_action_space) > 1:
-                act_space = spaces.Tuple(total_action_space)
-                self.action_space.append(act_space)
-            else:
-                self.action_space.append(total_action_space[0])
-            
-            # observation space
-            obs_dim = len(observation_callback(agent, self.world))
-            share_obs_dim += obs_dim
-            self.observation_space.append(spaces.Box(
-                low=-np.inf, high=+np.inf, shape=(obs_dim,), dtype=np.float32))  # [-inf,inf]
-            agent.action.c = np.zeros(self.world.dim_c)
-        
-        self.share_observation_space = [spaces.Box(
-            low=-np.inf, high=+np.inf, shape=(share_obs_dim,), dtype=np.float32) for _ in range(self.num_agents)]
+        self.action_space = spaces.Box( \
+            low=-self.agents[0].u_range, high=+self.agents[0].u_range, \
+                shape=(world.dim_p*self.num_agents,), dtype=np.float32)
+        obs_dim = len(observation_callback(self.agents[0], self.world))
+        self.observation_space = spaces.Box( \
+                low=-np.inf, high=+np.inf, shape=(obs_dim,), dtype=np.float32)
         
         # rendering
         self.shared_viewer = shared_viewer
@@ -112,34 +79,16 @@ class MultiAgentEnv(gym.Env):
     # step  this is  env.step()
     def step(self, action_n):
         self.current_step += 1
-        obs_n = []
-        reward_n = []
-        done_n = []
-        info_n = []
         self.agents = self.world.policy_agents
         # set action for each agent
+        action_n = np.array(action_n).reshape(self.num_agents, -1)
         for i, agent in enumerate(self.agents):
-            self._set_action(action_n[i], agent, self.action_space[i])
+            self._set_action(action_n[i], agent)
         # advance world state
         self.world.step()  # core.step()
-        # record observation for each agent
-        for i, agent in enumerate(self.agents):
-            obs_n.append(self._get_obs(agent))
-            reward_n.append([self._get_reward(agent)])
-            done_n.append(self._get_done(agent))
-            info = {'individual_reward': self._get_reward(agent)}
-            env_info = self._get_info(agent)
-            if 'fail' in env_info.keys():
-                info['fail'] = env_info['fail']
-            info_n.append(info)
-        # all agents get total reward in cooperative case, if shared reward, all agents have the same reward, and reward is sum
-        reward = np.sum(reward_n)
-        if self.shared_reward:
-            reward_n = [[reward]] * self.num_agents
-
-        if self.post_step_callback is not None:
-            self.post_step_callback(self.world)
-        return obs_n, reward_n, done_n, info_n
+        obs = self._get_obs()
+        rew = self.compute_reward(obs['achieved_goal'], obs['desired_goal'])
+        return obs, rew, self._get_done(), None
 
     def reset(self):
         self.current_step = 0
@@ -148,43 +97,44 @@ class MultiAgentEnv(gym.Env):
         # reset renderer
         self._reset_render()
         # record observations for each agent
-        obs_n = []
         self.agents = self.world.policy_agents
 
-        for agent in self.agents:
-            obs_n.append(self._get_obs(agent))
-        return obs_n
+        return self._get_obs()
 
-    # get info used for benchmarking
-    def _get_info(self, agent):
-        if self.info_callback is None:
-            return {}
-        return self.info_callback(agent, self.world)
-
-    # get observation for a particular agent
-    def _get_obs(self, agent):
+    # get observation for a all agent
+    def _get_obs(self):
         if self.observation_callback is None:
             return np.zeros(0)
-        return self.observation_callback(agent, self.world)
+        obs = np.zeros(0)
+        for agent in self.agents:
+            agent_obs = self.observation_callback(agent, self.world)
+            obs = np.append(obs, agent_obs['observation'])
+        ag = agent_obs['achieved_goal']
+        g = agent_obs['desired_goal']
+        obs = {
+            'observation': obs,
+            'achieved_goal': ag, 
+            'desired_goal': g
+        }
+        return obs
 
-    # get dones for a particular agent
-    # unused right now -- agents are allowed to go beyond the viewing screen
-    def _get_done(self, agent):
-        if self.done_callback is None:
-            if self.current_step >= self.world_length:
-                return True
-            else:
-                return False
-        return self.done_callback(agent, self.world)
+    def _get_done(self):
+        return self.current_step == 100
 
-    # get reward for a particular agent
-    def _get_reward(self, agent):
-        if self.reward_callback is None:
-            return 0.0
-        return self.reward_callback(agent, self.world)
+    def compute_reward(self, achieved_goal, desired_goal, info=None):
+        ideal_shape = desired_goal.reshape(self.num_agents, self.world.dim_p)
+        agent_shape = achieved_goal.reshape(self.num_agents, self.world.dim_p)
+        # from matplotlib import pyplot
+        # # for pos in ideal_shape:
+        # pyplot.scatter(ideal_shape[..., 0], ideal_shape[...,1])
+        # pyplot.scatter(agent_shape[..., 0], agent_shape[..., 1])
+        # pyplot.show()
+        # exit()
+        max_dis = max(directed_hausdorff(ideal_shape, agent_shape)[0], directed_hausdorff(agent_shape, ideal_shape)[0])
+        return -float(max_dis > 0.07)
 
     # set env action for a particular agent
-    def _set_action(self, action, agent, action_space, time=None):
+    def _set_action(self, action, agent, time=None):
         agent.action.u = np.zeros(self.world.dim_p)
         agent.action.c = np.zeros(self.world.dim_c)
         # process action
