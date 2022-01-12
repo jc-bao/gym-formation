@@ -1,4 +1,5 @@
 import argparse
+from matplotlib.pyplot import imshow
 import numpy as np
 
 import formation_gym
@@ -27,4 +28,8 @@ if __name__ == '__main__':
         if np.all(done_n):
             obs_n = env.reset()
         # render all agent views
-        env.render()
+        from matplotlib import pyplot as plt
+        frame = np.array(env.render(mode = 'rgb_array'))
+        plt.imshow(frame)
+        plt.show()
+        exit()

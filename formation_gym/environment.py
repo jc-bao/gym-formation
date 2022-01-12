@@ -124,16 +124,18 @@ class MultiAgentEnv(gym.GoalEnv):
         return self.current_step == self._max_episode_steps
 
     def compute_reward(self, achieved_goal, desired_goal, info=None):
-        ideal_shape = desired_goal.reshape(self.num_agents, self.world.dim_p)
-        agent_shape = achieved_goal.reshape(self.num_agents, self.world.dim_p)
+        ideal_shape = desired_goal.reshape(self.num_agents, 1, self.world.dim_p)
+        agent_shape = achieved_goal.reshape(1, self.num_agents, self.world.dim_p)
         # from matplotlib import pyplot
         # # for pos in ideal_shape:
         # pyplot.scatter(ideal_shape[..., 0], ideal_shape[...,1])
         # pyplot.scatter(agent_shape[..., 0], agent_shape[..., 1])
         # pyplot.show()
         # exit()
-        max_dis = max(directed_hausdorff(ideal_shape, agent_shape)[0], directed_hausdorff(agent_shape, ideal_shape)[0])
-        return -float(max_dis > 0.07)
+        aa = np.repeat(ideal_shape,self.num_agents,axis = 1)
+        bb = np.repeat(agent_shape,self.num_agents,axis = 0)
+        done = (np.abs(aa-bb) < 0.05).all(axis=-1).any(axis=-1).all()
+        return float(done) - 1
 
     # set env action for a particular agent
     def _set_action(self, action, agent, time=None):
@@ -222,14 +224,14 @@ class MultiAgentEnv(gym.GoalEnv):
 
             if self.viewers[i] is None:
                 # import rendering only if we need it (and don't import for headless machines)
-                #from gym.envs.classic_control import rendering
+                # from gym.envs.classic_control import rendering
                 from . import rendering
-                self.viewers[i] = rendering.Viewer(700, 700)
+                self.viewers[i] = rendering.Viewer(300, 300)
 
         # create rendering geometry
         if self.render_geoms is None:
             # import rendering only if we need it (and don't import for headless machines)
-            #from gym.envs.classic_control import rendering
+            # from gym.envs.classic_control import rendering
             from . import rendering
             self.render_geoms = []
             self.render_geoms_xform = []
@@ -342,7 +344,7 @@ class MultiAgentEnv(gym.GoalEnv):
             results.append(self.viewers[i].render(
                 return_rgb_array=mode == 'rgb_array'))
 
-        return results
+        return results[0]
 
     # create receptor field locations in local coordinate frame
     def _make_receptor_locations(self, agent):
