@@ -22,6 +22,7 @@ class MultiAgentEnv(gym.GoalEnv):
 
         self.world = world
         self.world_length = self.world.world_length
+        self._max_episode_steps = 100
         self.current_step = 0
         self.agents = self.world.policy_agents
         # set required vectorized gym env property
@@ -88,7 +89,8 @@ class MultiAgentEnv(gym.GoalEnv):
         self.world.step()  # core.step()
         obs = self._get_obs()
         rew = self.compute_reward(obs['achieved_goal'], obs['desired_goal'])
-        return obs, rew, self._get_done(), None
+        info = {'is_success': rew==0}
+        return obs, rew, self._get_done(), info
 
     def reset(self):
         self.current_step = 0
@@ -119,7 +121,7 @@ class MultiAgentEnv(gym.GoalEnv):
         return obs
 
     def _get_done(self):
-        return self.current_step == 100
+        return self.current_step == self._max_episode_steps
 
     def compute_reward(self, achieved_goal, desired_goal, info=None):
         ideal_shape = desired_goal.reshape(self.num_agents, self.world.dim_p)
