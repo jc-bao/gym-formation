@@ -27,9 +27,4 @@ if __name__ == '__main__':
         print(obs_n['observation'].shape, obs_n['achieved_goal'].shape, obs_n['desired_goal'].shape, reward_n)
         if np.all(done_n):
             obs_n = env.reset()
-        # render all agent views
-        from matplotlib import pyplot as plt
-        frame = np.array(env.render(mode = 'rgb_array'))
-        plt.imshow(frame)
-        plt.show()
-        exit()
+        env.render(mode = 'human')

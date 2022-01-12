@@ -86,8 +86,7 @@ class Scenario(BaseScenario):
                 shape = np.array(self.ideal_shape)
                 if len(self.ideal_shape) == 0 or (np.linalg.norm(shape-pos, axis=-1) > 0.3).all():
                     break
-            self.ideal_shape.append(world.agents[i].state.p_pos.copy())
-            # self.ideal_shape.append(pos)
+            self.ideal_shape.append(pos)
             landmark.state.p_pos = self.ideal_shape[i]
             landmark.state.p_vel = np.zeros(world.dim_p)
         self.ideal_shape = self.ideal_shape - np.mean(self.ideal_shape, 0)
