@@ -3,7 +3,7 @@ from .environment import MultiAgentEnv
 import os.path as osp
 import numpy as np
 
-def make_env(scenario_name='basic_formation_env', benchmark=False, num_agents = 3):
+def make_env(scenario_name='basic_formation_env', benchmark=False, num_agents = 3, reward_type = 'sparse'):
     # load scenario from script
     pathname = osp.join(osp.dirname(__file__), 'envs/'+scenario_name+'.py')
     scenario = imp.load_source('', pathname).Scenario() 
@@ -13,7 +13,7 @@ def make_env(scenario_name='basic_formation_env', benchmark=False, num_agents = 
     if benchmark:
         env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, scenario.benchmark_data, shared_viewer = True)
     else:
-        env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, shared_viewer = True)
+        env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, shared_viewer = True, reward_type = reward_type)
     return env
 
 def ezpolicy(obs):

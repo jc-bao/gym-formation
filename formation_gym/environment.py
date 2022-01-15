@@ -18,8 +18,8 @@ class MultiAgentEnv(gym.GoalEnv):
     def __init__(self, world, reset_callback=None, reward_callback=None,
                  observation_callback=None, info_callback=None,
                  done_callback=None, post_step_callback=None,
-                 shared_viewer=True, discrete_action=False):
-
+                 shared_viewer=True, discrete_action=False, reward_type = 'sparse'):
+        self.reward_type = reward_type
         self.world = world
         self.world_length = self.world.world_length
         self._max_episode_steps = 100
@@ -126,16 +126,16 @@ class MultiAgentEnv(gym.GoalEnv):
     def compute_reward(self, achieved_goal, desired_goal, info=None):
         ideal_shape = desired_goal.reshape(self.num_agents, 1, self.world.dim_p)
         agent_shape = achieved_goal.reshape(1, self.num_agents, self.world.dim_p)
-        # from matplotlib import pyplot
-        # # for pos in ideal_shape:
-        # pyplot.scatter(ideal_shape[..., 0], ideal_shape[...,1])
-        # pyplot.scatter(agent_shape[..., 0], agent_shape[..., 1])
-        # pyplot.show()
-        # exit()
-        aa = np.repeat(ideal_shape,self.num_agents,axis = 1)
-        bb = np.repeat(agent_shape,self.num_agents,axis = 0)
-        done = (np.abs(aa-bb) < 0.05).all(axis=-1).any(axis=-1).all()
-        return float(done) - 1
+        if self.reward_type == 'sparse':
+            aa = np.repeat(ideal_shape,self.num_agents,axis = 1)
+            bb = np.repeat(agent_shape,self.num_agents,axis = 0)
+            done = (np.abs(aa-bb) < 0.05).all(axis=-1).any(axis=-1).all()
+            rew = float(done) - 1
+        elif self.reward_type == 'hd':
+            rew = -max(directed_hausdorff(agent_shape, ideal_shape)[0], directed_hausdorff(ideal_shape, agent_shape)[0])
+        else:
+            raise NotImplementedError
+        return rew
 
     # set env action for a particular agent
     def _set_action(self, action, agent, time=None):
