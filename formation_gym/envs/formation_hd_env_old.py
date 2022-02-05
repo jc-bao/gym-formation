@@ -23,14 +23,14 @@ class Scenario(BaseScenario):
             agent.name = 'agent %d' % i
             agent.collide = True
             agent.silent = True
-            agent.size = 0.1
+            agent.size = 0.06
         # landmark properties
         world.landmarks = [Landmark() for i in range(num_agents)]
         for i, landmark in enumerate(world.landmarks):
             landmark.name = 'landmarks %d' % i
             landmark.collide = False 
             landmark.movable = False
-            landmark.size = 0.05
+            landmark.size = 0.02
         # initial conditions
         self.reset_world(world)
         return world
@@ -46,10 +46,9 @@ class Scenario(BaseScenario):
         for other in world.agents:
             if other is agent: continue
             other_pos = np.append(other_pos, other.state.p_pos - agent.state.p_pos)
-        ag = np.array(u-np.mean(u,0)).sort(key=lambda x: x[0])
         obs = {
             'observation': np.append(agent.state.p_vel, other_pos),
-            'achieved_goal': np.concatenate(ag),
+            'achieved_goal': np.concatenate(u-np.mean(u,0)),
             'desired_goal': self.ideal_shape.flatten(),
         }
         return obs
@@ -90,8 +89,7 @@ class Scenario(BaseScenario):
             self.ideal_shape.append(pos)
             landmark.state.p_pos = self.ideal_shape[i]
             landmark.state.p_vel = np.zeros(world.dim_p)
-        self.ideal_shape = np.array(self.ideal_shape - np.mean(self.ideal_shape, 0))
-        self.ideal_shape.sort(key=lambda x: x[0])
+        self.ideal_shape = self.ideal_shape - np.mean(self.ideal_shape, 0)
         # ideal velocity
         self.ideal_vel = np.random.uniform(-1, +1, world.dim_p)
 
