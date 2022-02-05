@@ -124,15 +124,17 @@ class MultiAgentEnv(gym.GoalEnv):
         return self.current_step == self._max_episode_steps
 
     def compute_reward(self, achieved_goal, desired_goal, info=None):
-        ideal_shape = desired_goal.reshape(self.num_agents, 1, self.world.dim_p)
-        agent_shape = achieved_goal.reshape(1, self.num_agents, self.world.dim_p)
         if self.reward_type == 'sparse':
+            ideal_shape = desired_goal.reshape(self.num_agents, 1, self.world.dim_p)
+            agent_shape = achieved_goal.reshape(1, self.num_agents, self.world.dim_p)
             aa = np.repeat(ideal_shape,self.num_agents,axis = 1)
             bb = np.repeat(agent_shape,self.num_agents,axis = 0)
             done = (np.abs(aa-bb) < 0.05).all(axis=-1).any(axis=-1).all()
             rew = float(done) - 1
         elif self.reward_type == 'hd':
-            rew = -max(directed_hausdorff(agent_shape, ideal_shape)[0], directed_hausdorff(ideal_shape, agent_shape)[0])
+            ideal_shape = desired_goal.reshape(self.num_agents, self.world.dim_p)
+            agent_shape = achieved_goal.reshape(self.num_agents, self.world.dim_p)
+            rew = -max(directed_hausdorff(ideal_shape, agent_shape)[0], directed_hausdorff(agent_shape, ideal_shape)[0])
         else:
             raise NotImplementedError
         return rew

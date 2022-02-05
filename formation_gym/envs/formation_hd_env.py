@@ -46,7 +46,8 @@ class Scenario(BaseScenario):
         for other in world.agents:
             if other is agent: continue
             other_pos = np.append(other_pos, other.state.p_pos - agent.state.p_pos)
-        ag = np.array(u-np.mean(u,0)).sort(key=lambda x: x[0])
+        u.sort(key=lambda x: x[0])
+        ag = u - np.mean(u,0)
         obs = {
             'observation': np.append(agent.state.p_vel, other_pos),
             'achieved_goal': np.concatenate(ag),
@@ -90,8 +91,8 @@ class Scenario(BaseScenario):
             self.ideal_shape.append(pos)
             landmark.state.p_pos = self.ideal_shape[i]
             landmark.state.p_vel = np.zeros(world.dim_p)
-        self.ideal_shape = np.array(self.ideal_shape - np.mean(self.ideal_shape, 0))
         self.ideal_shape.sort(key=lambda x: x[0])
+        self.ideal_shape = self.ideal_shape - np.mean(self.ideal_shape, 0)
         # ideal velocity
         self.ideal_vel = np.random.uniform(-1, +1, world.dim_p)
 
