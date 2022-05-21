@@ -17,14 +17,14 @@ class Scenario(BaseScenario):
         world.dim_c = 2 # communication channel
         world.collaborative = True
         # agent properties
-        world.agents = [Agent() for i in range(num_agents)]
+        world.agents = [Agent() for _ in range(num_agents)]
         for i, agent in enumerate(world.agents):
             agent.name = 'agent %d' % i
             agent.collide = True
             agent.silent = True
-            agent.size = 0.04
+            agent.size = 0.1
         # landmark properties
-        world.landmarks = [Landmark() for i in range(num_landmarks)]
+        world.landmarks = [Landmark() for _ in range(num_landmarks)]
         for i, landmark in enumerate(world.landmarks):
             landmark.name = 'landmarks %d' % i
             landmark.collide = False 
@@ -36,9 +36,7 @@ class Scenario(BaseScenario):
     
     def observation(self, agent, world):
         # agent pos & communication
-        entity_pos = []
-        for entity in world.landmarks:
-            entity_pos.append(entity.state.p_pos)
+        entity_pos = [entity.state.p_pos for entity in world.landmarks]
         other_pos = []
         comm = []
         for other in world.agents:
@@ -49,17 +47,12 @@ class Scenario(BaseScenario):
 
     def reward(self, agent, world):
         rew = 0
-        u = [a.state.p_pos for a in world.agents]
-        v = [l.state.p_pos for l in world.landmarks]
+        u = np.array([a.state.p_pos for a in world.agents])
+        v = np.array([l.state.p_pos for l in world.landmarks])
         # delta = np.mean(u, 0) - np.mean(v, 0)
-        u = u - np.mean(u, 0)
-        v = v - np.mean(v, 0)
+        u -= np.mean(u, 0)
+        v -= np.mean(v, 0)
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
-        # change landmark pos and color
-        # for i in range(len(world.landmarks)):
-        #     world.landmarks[i].state.p_pos += delta
-            # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
-            # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
             for a in world.agents:
                 if self.is_collision(a, agent):

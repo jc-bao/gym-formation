@@ -14,7 +14,7 @@ from algorithms.maddpg import MADDPG
 
 import formation_gym
 
-USE_CUDA = False  # torch.cuda.is_available()
+USE_CUDA = torch.cuda.is_available()
 
 def make_parallel_env(env_id, n_rollout_threads, seed, agent_num):
     def get_env_fn(rank):
