@@ -16,9 +16,10 @@ class Runner:
         self.env = env
         self.agents = self._init_agents()
         self.buffer = Buffer(args)
-        self.save_path = self.args.save_dir + '/' + self.args.scenario_name
+        self.save_path = f'{self.args.save_dir}/{self.args.scenario_name}'
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
+        np.random.seed(4)
 
     def _init_agents(self):
         agents = []
@@ -40,8 +41,8 @@ class Runner:
                     action = agent.select_action(s[agent_id], self.noise, self.epsilon)
                     u.append(action)
                     actions.append(action)
-            for i in range(self.args.n_agents, self.args.n_players):
-                actions.append([0, np.random.rand() * 2 - 1, 0, np.random.rand() * 2 - 1, 0])
+            actions.extend([0, np.random.rand() * 2 - 1, 0, np.random.rand() * 2 - 1, 0] for _ in range(self.args.n_agents, self.args.n_players))
+
             s_next, r, done, info = self.env.step(actions)
             self.buffer.store_episode(s[:self.args.n_agents], u, r[:self.args.n_agents], s_next[:self.args.n_agents])
             s = s_next
@@ -55,31 +56,30 @@ class Runner:
                 returns.append(self.evaluate())
                 plt.figure()
                 plt.plot(range(len(returns)), returns)
-                plt.xlabel('episode * ' + str(self.args.evaluate_rate / self.episode_limit))
+                plt.xlabel(f'episode * {str(self.args.evaluate_rate / self.episode_limit)}')
                 plt.ylabel('average returns')
-                plt.savefig(self.save_path + '/plt.png', format='png')
+                plt.savefig(f'{self.save_path}/plt.png', format='png')
             self.noise = max(0.05, self.noise - 0.0000005)
             self.epsilon = max(0.05, self.noise - 0.0000005)
-            np.save(self.save_path + '/returns.pkl', returns)
+            np.save(f'{self.save_path}/returns', returns)
 
     def evaluate(self, rnd = False):
         returns = []
-        for episode in range(self.args.evaluate_episodes):
+        for _ in range(self.args.evaluate_episodes):
             # reset the environment
             s = self.env.reset()
             rewards = 0
-            for time_step in range(self.args.evaluate_episode_len):
+            for _ in range(self.args.evaluate_episode_len):
                 if rnd: self.env.render()
                 actions = []
                 with torch.no_grad():
                     for agent_id, agent in enumerate(self.agents):
                         action = agent.select_action(s[agent_id], 0, 0)
                         actions.append(action)
-                for i in range(self.args.n_agents, self.args.n_players):
-                    actions.append([0, np.random.rand() * 2 - 1, 0, np.random.rand() * 2 - 1, 0])
+                actions.extend([0, np.random.rand() * 2 - 1, 0, np.random.rand() * 2 - 1, 0] for _ in range(self.args.n_agents, self.args.n_players))
+
                 s_next, r, done, info = self.env.step(actions)
-                if isinstance(r[0], list): rewards += r[0][0]
-                else: rewards += r[0]
+                rewards += r[0][0] if isinstance(r[0], list) else r[0]
                 s = s_next
             returns.append(rewards)
             print('Returns is', rewards, 'Final Reward:', r[0])
