@@ -6,7 +6,8 @@ import torch
 if __name__ == '__main__':
     # get the params
     args = get_args()
-    args.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    # args.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    args.device = 'cpu'
     env = formation_gym.make_env(args.scenario_name, benchmark = False, num_agents = args.num_agents)
     args.n_agents = args.num_agents
     args.n_players = 0
