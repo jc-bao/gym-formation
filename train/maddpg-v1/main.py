@@ -4,6 +4,7 @@ import formation_gym
 import torch
 
 if __name__ == '__main__':
+    torch.set_num_threads(1)
     # get the params
     args = get_args()
     # args.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
