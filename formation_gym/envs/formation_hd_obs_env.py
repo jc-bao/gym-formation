@@ -25,7 +25,7 @@ class Scenario(BaseScenario):
             agent.name = 'agent %d' % i
             agent.collide = True
             agent.silent = True
-            agent.size = 0.08
+            agent.size = 0.1
         # landmark and obstacles properties
         world.landmarks = [Landmark() for i in range(num_landmarks + num_obstacles)]
         for i, landmark in enumerate(world.landmarks):
@@ -40,7 +40,7 @@ class Scenario(BaseScenario):
                 landmark.name = 'obstacles %d' % (i - num_landmarks)
                 landmark.collide = True 
                 landmark.movable = True
-                landmark.size = 0.15
+                landmark.size = 0.1
         # initial conditions
         self.reset_world(world)
         return world
@@ -70,11 +70,11 @@ class Scenario(BaseScenario):
         v = v - np.mean(v, 0)
         rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
         # change landmark pos and color
-        for i, landmark in enumerate(world.landmarks):
+        # for i, landmark in enumerate(world.landmarks):
             # if i < self.num_landmarks:
             #     landmark.state.p_pos += delta
             # else:
-            landmark.state.p_vel = np.array([0, -0.4])
+            # landmark.state.p_vel = np.array([0, -0.4])
             # dist = min([np.linalg.norm(a.state.p_pos - world.landmarks[i].state.p_pos) for a in world.agents])
             # if dist <= 0.2: world.landmarks[i].color = np.array([0, 0.6, 0])
         if agent.collide:
