@@ -10,7 +10,7 @@ refer to https://www.wikiwand.com/en/Hausdorff_distance#/Applications
 '''
 
 class Scenario(BaseScenario):
-    def make_world(self, num_agents = 3, num_landmarks = 3, episode_length = 25, reward_type = 'fix'):
+    def make_world(self, num_agents = 3, num_landmarks = 3, episode_length = 25, reward_type = 'hd'):
         self.reward_type = reward_type
         self.num_agents = num_agents
         # world properties
