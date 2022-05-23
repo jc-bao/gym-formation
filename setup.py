@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from pathlib import Path
 
 setup(
@@ -13,5 +13,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         ],
+    packages=find_packages(
+        exclude=["train"]
+    ),
     python_requires='>=3.6'
 )
