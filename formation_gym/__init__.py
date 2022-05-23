@@ -13,7 +13,8 @@ def make_env(scenario_name='basic_formation_env', benchmark=False, num_agents = 
     if benchmark:
         env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, scenario.benchmark_data, shared_viewer = False)
     else:
-        env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, info_callback=scenario.benchmark_data, done_callback = scenario.done, shared_viewer = True)
+        # env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, info_callback=scenario.benchmark_data, done_callback = scenario.done, shared_viewer = True)
+        env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, shared_viewer = True)
     return env
 
 def ezpolicy(world):
