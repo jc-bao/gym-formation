@@ -10,7 +10,9 @@ refer to https://www.wikiwand.com/en/Hausdorff_distance#/Applications
 '''
 
 class Scenario(BaseScenario):
-    def make_world(self, num_agents = 3, num_landmarks = 3, episode_length = 25):
+    def make_world(self, num_agents = 3, num_landmarks = 3, episode_length = 25, reward_type = 'fix'):
+        self.reward_type = reward_type
+        self.num_agents = num_agents
         # world properties
         world = World()
         world.world_length = episode_length
@@ -46,18 +48,44 @@ class Scenario(BaseScenario):
         return np.concatenate([agent.state.p_vel]+[agent.state.p_pos]+entity_pos + other_pos + comm)
 
     def reward(self, agent, world):
-        rew = 0
+        if self.reward_type == 'hd':
+            rew = 0
+            u = np.array([a.state.p_pos for a in world.agents])
+            v = np.array([l.state.p_pos for l in world.landmarks])
+            # delta = np.mean(u, 0) - np.mean(v, 0)
+            u -= np.mean(u, 0)
+            v -= np.mean(v, 0)
+            rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
+            if agent.collide:
+                for a in world.agents:
+                    if self.is_collision(a, agent):
+                        rew -= 1
+        elif self.reward_type == 'min_dist':
+            rew = 0
+            u = np.array([a.state.p_pos for a in world.agents])
+            v = np.array([l.state.p_pos for l in world.landmarks])
+            u -= np.mean(u, 0)
+            v -= np.mean(v, 0)
+            for l in v:
+                dists = [np.linalg.norm(a - l) for a in u]
+                rew -= min(dists)
+        elif self.reward_type == 'fix':
+            rew = 0
+            u = np.array([a.state.p_pos for a in world.agents])
+            v = np.array([l.state.p_pos for l in world.landmarks])
+            u -= np.mean(u, 0)
+            v -= np.mean(v, 0)
+            rew -= np.linalg.norm(u - v)
+        return rew
+
+    def done(self, agent, world):
         u = np.array([a.state.p_pos for a in world.agents])
         v = np.array([l.state.p_pos for l in world.landmarks])
         # delta = np.mean(u, 0) - np.mean(v, 0)
         u -= np.mean(u, 0)
         v -= np.mean(v, 0)
-        rew = -max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
-        if agent.collide:
-            for a in world.agents:
-                if self.is_collision(a, agent):
-                    rew -= 1
-        return rew
+        dist = max(directed_hausdorff(u, v)[0], directed_hausdorff(v, u)[0])
+        return dist < 0.05*self.num_agents
 
     def reset_world(self, world):
         # agent
@@ -96,5 +124,4 @@ class Scenario(BaseScenario):
 
     def is_collision(self, agent1, agent2):
         dist = np.linalg.norm(agent1.state.p_pos - agent2.state.p_pos)
-        return dist < (agent1.size + agent2.size)
-
+        return dist < (agent1.size + agent2.size)/2

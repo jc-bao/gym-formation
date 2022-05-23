@@ -17,9 +17,7 @@ class Actor(nn.Module):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
-        actions = self.max_action * torch.tanh(self.action_out(x))
-
-        return actions
+        return self.max_action * torch.tanh(self.action_out(x))
 
 
 class Critic(nn.Module):
@@ -40,5 +38,4 @@ class Critic(nn.Module):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
-        q_value = self.q_out(x)
-        return q_value
+        return self.q_out(x)

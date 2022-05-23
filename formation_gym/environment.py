@@ -129,6 +129,8 @@ class MultiAgentEnv(gym.Env):
             env_info = self._get_info(agent)
             if 'fail' in env_info.keys():
                 info['fail'] = env_info['fail']
+            if 'collisions' in env_info.keys():
+                info['collisions'] = env_info['collisions']
             info_n.append(info)
 
         # all agents get total reward in cooperative case, if shared reward, all agents have the same reward, and reward is sum
@@ -265,7 +267,6 @@ class MultiAgentEnv(gym.Env):
                         word = alphabet[np.argmax(other.state.c)]
                     message += (other.name + ' to ' +
                                 agent.name + ': ' + word + '   ')
-            print(message)
 
         for i in range(len(self.viewers)):
             # create viewers (if necessary)

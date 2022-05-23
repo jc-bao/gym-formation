@@ -65,11 +65,14 @@ class Runner:
 
     def evaluate(self, rnd = False):
         returns = []
+        steps = []
+        collides = []
         for _ in range(self.args.evaluate_episodes):
             # reset the environment
             s = self.env.reset()
             rewards = 0
-            for _ in range(self.args.evaluate_episode_len):
+            c_num = 0
+            for j in range(self.args.evaluate_episode_len):
                 if rnd: self.env.render()
                 actions = []
                 with torch.no_grad():
@@ -79,8 +82,16 @@ class Runner:
                 actions.extend([0, np.random.rand() * 2 - 1, 0, np.random.rand() * 2 - 1, 0] for _ in range(self.args.n_agents, self.args.n_players))
 
                 s_next, r, done, info = self.env.step(actions)
+                for i in range(self.args.n_agents):
+                    c_num += (info[i]['collisions']-1)
+                c_num/=2
                 rewards += r[0][0] if isinstance(r[0], list) else r[0]
                 s = s_next
+                if np.all(done): 
+                    break
+            steps.append(j)
             returns.append(rewards)
-            print('Returns is', rewards, 'Final Reward:', r[0])
+            collides.append(c_num)
+            print('Returns is', rewards, 'Final Reward:', r[0], 'Steps:', j, 'Collisions:', c_num)
+        print('Average returns is', np.mean(returns), 'Average steps is', np.mean(steps), 'pm', np.std(steps), 'Average collides is', np.mean(collides), 'pm', np.std(collides))
         return sum(returns) / self.args.evaluate_episodes
